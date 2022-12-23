@@ -1,5 +1,5 @@
 let config;
-if (process.env.JAWSDB_URL) {
+if (process.env.NODE_ENV === 'production') {
   config = { JAWSDB_URL: process.env.JAWSDB_URL };
 } else {
   config = {
