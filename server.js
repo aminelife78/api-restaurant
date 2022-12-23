@@ -20,7 +20,7 @@ const routeCategories = require("./routes/categories.routes");
 app.get("/", (req, res) => {
   res.send("voici mon site restaurant AHMED-ZEYD");
 });
-console.log(process.env.JAWSDB_URL)
+console.log(process.env.NODE_ENV)
 
 app.use(routeCategories);
 
