@@ -24,6 +24,7 @@ console.log(process.env.NODE_ENV)
 
 app.use(routeCategories);
 
+
 // port recuperer depuis config.env
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`http://localhost:${port}`));
