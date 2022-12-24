@@ -1,47 +1,57 @@
 const db = require("../db/db");
-const asyncHandler = require('express-async-handler')
-
+const asyncHandler = require("express-async-handler");
+const apiError = require("../utils/apiError");
 
 // recuperer toutes les categories des plats
 const getCategories = asyncHandler(async (req, res) => {
-  const categories = await db.query("SELECT * FROM categories")
-  const countCategories = categories.length
-  res.status(200).json({result:countCategories,data: categories})
-})
-
+  const categories = await db.query("SELECT * FROM categories");
+  const countCategories = categories.length;
+  res.status(200).json({ result: countCategories, data: categories });
+});
 
 // recuperer une seul categories
 
-const getCategory = asyncHandler(async (req, res) => {
-  const {id} = req.params
-  const category = await db.query("SELECT * FROM categories WHERE id=?",[id])
-  res.status(200).json({result:category})
-})
+const getCategory = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const category = await db.query("SELECT * FROM categories WHERE id=?", [id]);
+  if (!category[0]) {
+    return next(new apiError(`pas de categories pour ce id ${id}`, 400));
+  }
+  res.status(200).json({ result: category });
+});
 
 // creer une categorie
 const createCategory = asyncHandler(async (req, res) => {
-  const {name} = req.body
-  await db.query("INSERT INTO categories (name) VALUES (?)", [
-    name,
-  ]);
-  res.status(201).json({message:"categories bien ajouter"})
-})
+  const { name } = req.body;
+  await db.query("INSERT INTO categories (name) VALUES (?)", [name]);
+  res.status(201).json({ message: "categories bien ajouter" });
+});
 
 // modifier une categorie
-const updateCategory = asyncHandler(async (req, res) => {
-  const {id} = req.params;
-  const {name} = req.body;
-  await db.query("UPDATE categories SET name=? WHERE id=?",[name,id])
-  res.status(200).json({message:`la categorie avec id:${id} est bien modifier`})
-})
+const updateCategory = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  const category = await db.query("SELECT * FROM categories WHERE id=?", [id]);
+
+  if (!category[0]) {
+    return next(new apiError(`pas de categories pour ce id ${id}`, 400));
+  }
+
+  await db.query("UPDATE categories SET name=? WHERE id=?", [name, id]);
+  res
+    .status(200)
+    .json({ message: `la categorie avec id ${id} est bien modifier` });
+});
 
 // suprimer une categorie
 const deleteCategory = asyncHandler(async (req, res) => {
-  const {id} = req.params;
-  await db.query("DELETE FROM categories WHERE id=?",[id])
-  res.status(200).json({message:`la categorie avec id:${id} est bien supprimer`})
-})
-
+  const { id } = req.params;
+  await db.query("DELETE FROM categories WHERE id=?", [id]);
+  res
+    .status(200)
+    .json({ message: `la categorie avec id ${id} est bien supprimer` });
+});
 
 // exporte crud les categories
 module.exports = {
@@ -49,5 +59,5 @@ module.exports = {
   getCategory,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 };
