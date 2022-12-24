@@ -27,11 +27,27 @@ const createCategory = asyncHandler(async (req, res) => {
   res.status(201).json({message:"categories bien ajouter"})
 })
 
+// modifier une categorie
+const updateCategory = asyncHandler(async (req, res) => {
+  const {id} = req.params;
+  const {name} = req.body;
+  await db.query("UPDATE categories SET name=? WHERE id=?",[name,id])
+  res.status(200).json({message:`la categorie avec id:${id} est bien modifier`})
+})
+
+// suprimer une categorie
+const deleteCategory = asyncHandler(async (req, res) => {
+  const {id} = req.params;
+  await db.query("DELETE FROM categories WHERE id=?",[id])
+  res.status(200).json({message:`la categorie avec id:${id} est bien supprimer`})
+})
 
 
-// 
+// exporte crud les categories
 module.exports = {
   getCategories,
   getCategory,
-  createCategory
+  createCategory,
+  updateCategory,
+  deleteCategory
 };
