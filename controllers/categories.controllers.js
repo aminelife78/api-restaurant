@@ -14,7 +14,7 @@ const getCategories = asyncHandler(async (req, res) => {
 
 const getCategory = asyncHandler(async (req, res) => {
   const {id} = req.params
-  const category = await db.query("SELECT * FROM categories WHERE id=? OR like",[id])
+  const category = await db.query("SELECT * FROM categories WHERE id=?",[id])
   res.status(200).json({result:category})
 })
 
@@ -27,7 +27,7 @@ const createCategory = asyncHandler(async (req, res) => {
   res.status(201).json({message:"categories bien ajouter"})
 })
 
-// 
+
 
 // 
 module.exports = {
