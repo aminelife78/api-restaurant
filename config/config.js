@@ -1,6 +1,6 @@
 let config;
 if (process.env.NODE_ENV=='production') {
-  config = process.env.JAWSDB_URL
+  config = "mysql://cj3959iptt6ohvgu:x9rrld6uusayh4td@au77784bkjx6ipju.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/ucwqfl6wrm6jmf98"
 } else {
   config = {
     host: process.env.DB_HOST,
