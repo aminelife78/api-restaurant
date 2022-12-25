@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //require routes
 const routeCategories = require("./routes/categories.routes");
+const routePlats = require("./routes/plats.routes");
 
 app.get("/", (req, res) => {
   res.send("voici mon site restaurant AHMED-ZEYD");
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 //  routes middleware
 
 app.use("/api/v1/categories",routeCategories);
+app.use("/api/v1/plats",routePlats);
 
 
 
