@@ -1,5 +1,4 @@
 const path = require("path");
-
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -33,6 +32,10 @@ app.use(express.urlencoded({ extended: true }));
 //require routes
 const routeCategories = require("./routes/categories.routes");
 const routePlats = require("./routes/plats.routes");
+const routeMenus = require("./routes/menus.routes");
+const routeFormules = require("./routes/formules.routes");
+const routeUsers = require("./routes/users.routes");
+const routeAuth = require("./routes/auth.routes");
 
 app.get("/", (req, res) => {
   res.send("voici mon site restaurant AHMED-ZEYD");
@@ -43,6 +46,12 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/categories",routeCategories);
 app.use("/api/v1/plats",routePlats);
+app.use("/api/v1/menus",routeMenus);
+app.use("/api/v1/formules",routeFormules);
+app.use("/api/v1/users",routeUsers);
+app.use("/api/v1/auth",routeAuth);
+
+
 
 
 
