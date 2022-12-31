@@ -6,6 +6,7 @@ const apiError = require("../utils/apiError");
 
 
 
+
 // inscréption
 const register = asyncHandler(async (req, res, next) => {
   const {username,email,password,role,nombre_convives,phone} = req.body
