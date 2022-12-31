@@ -8,9 +8,9 @@ const {authorisation} = require("../controllers/auth.controllers")
 
 
 router.get("/",getPlats);
-router.post("/",authorisation("admin"),platUploadImage,createPlat);
-router.get("/:id",authorisation("admin"),getPlat);
-router.put("/:id",authorisation("admin"),updatePlat);
-router.delete("/:id",authorisation("admin"),deleteplat);
+router.post("/",platUploadImage,createPlat);
+router.get("/:id",getPlat);
+router.put("/:id",updatePlat);
+router.delete("/:id",deleteplat);
 
 module.exports = router;

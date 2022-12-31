@@ -6,9 +6,9 @@ const {authorisation} = require("../controllers/auth.controllers")
 
 
 router.get("/",gethoraires_ouvertes);
-router.post("/",authorisation("admin"),createhoraires_ouverte);
-router.get("/:id",authorisation("admin"),gethoraires_ouverte);
-router.put("/:id",authorisation("admin"),updatehoraires_ouverte);
-router.delete("/:id",authorisation("admin"),deletehoraires_ouverte);
+router.post("/",createhoraires_ouverte);
+router.get("/:id",gethoraires_ouverte);
+router.put("/:id",updatehoraires_ouverte);
+router.delete("/:id",deletehoraires_ouverte);
 
 module.exports = router;

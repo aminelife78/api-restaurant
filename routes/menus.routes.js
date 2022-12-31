@@ -6,9 +6,9 @@ const {authorisation} = require("../controllers/auth.controllers")
 
 
 router.get("/",getMenus);
-router.post("/",authorisation("admin"),createMenu);
-router.get("/:id",authorisation("admin"),getMenu);
-router.put("/:id",authorisation("admin"),updateMenu);
-router.delete("/:id",authorisation("admin"),deleteMenu);
+router.post("/",createMenu);
+router.get("/:id",getMenu);
+router.put("/:id",updateMenu);
+router.delete("/:id",deleteMenu);
 
 module.exports = router;
