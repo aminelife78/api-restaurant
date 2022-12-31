@@ -8,7 +8,7 @@ const apiError = require("../utils/apiError");
 
 // inscréption
 const register = asyncHandler(async (req, res, next) => {
-  const {username,email,password} = req.body
+  const {username,email,password,nombre_convives,phone} = req.body
   // 1 verifier si l'email existe deja?
   const countEmail = await db.query(
     "SELECT count(email) as number FROM users WHERE email=?",
@@ -31,8 +31,8 @@ const register = asyncHandler(async (req, res, next) => {
 
   // creer user
   await db.query(
-    "INSERT INTO users (username,email,password) VALUES (?,?,?)",
-    [username,email,hash]
+    "INSERT INTO users (username,email,password,nombre_convives,phone) VALUES (?,?,?,?,?)",
+    [username,email,hash,nombre_convives,phone]
   );
 
   const user = await db.query("SELECT * FROM users WHERE email=?", [email])

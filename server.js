@@ -36,7 +36,8 @@ const routeMenus = require("./routes/menus.routes");
 const routeFormules = require("./routes/formules.routes");
 const routeUsers = require("./routes/users.routes");
 const routeAuth = require("./routes/auth.routes");
-
+const routeGalerie = require("./routes/galerie.routes");
+const routeHoraires = require("./routes/horaires_ouverture.routes");
 app.get("/", (req, res) => {
   res.send("voici mon site restaurant AHMED-ZEYD");
 });
@@ -50,6 +51,8 @@ app.use("/api/v1/menus",routeMenus);
 app.use("/api/v1/formules",routeFormules);
 app.use("/api/v1/users",routeUsers);
 app.use("/api/v1/auth",routeAuth);
+app.use("/api/v1/galerie",routeGalerie);
+app.use("/api/v1/horaires",routeHoraires);
 
 
 
