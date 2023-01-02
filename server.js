@@ -39,7 +39,7 @@ const routeAuth = require("./routes/auth.routes");
 const routeGalerie = require("./routes/galerie.routes");
 const routeHoraires = require("./routes/horaires_ouverture.routes");
 app.get("/", (req, res) => {
-  res.send("voici mon site restaurant AHMED-ZEYD");
+  res.send("application web restaurant Ahmed Kitchen");
 });
 
 
