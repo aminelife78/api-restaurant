@@ -8,15 +8,20 @@ exports.getCategoryValidator = [
 
 exports.createCategoryValidator = [
   check("name")
+  .not()
+  .isNumeric()
+  .withMessage("le nom de catégories doit etres une chaine de caractères")
     .notEmpty()
     .withMessage("categories est obligatoire")
     .isLength({ min: 3 })
-    .withMessage("too short category name")
+    .withMessage("nom de catégorie trop court")
     .isLength({ max: 32 })
-    .withMessage("too long category name"),
+    .withMessage("nom de catégorie trop long"),
 
   validatorMiddleware,
 ];
+
+
 
 exports.updateCategoryValidator = [
   check("id").isNumeric().withMessage("Invalid category id"),

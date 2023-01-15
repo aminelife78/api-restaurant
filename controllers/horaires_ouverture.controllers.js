@@ -13,24 +13,24 @@ const gethoraires_ouvertes = asyncHandler(async (req, res) => {
 
 const gethoraires_ouverte = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const horaires_ouvertes = await db.query("SELECT * FROM horaires_ouverte WHERE id=?", [id]);
+  const horaires_ouvertes = await db.query("SELECT * FROM horaires_ouverture WHERE id=?", [id]);
   if (!horaires_ouvertes[0]) {
     return next(new apiError(`pas de horaires_ouvertes pour ce id ${id}`, 400));
   }
-  res.status(200).json({ result: horaires_ouvertes });
+  res.status(200).json({ data: horaires_ouvertes });
 });
 
-// creer une categorie
+// creer une horaires_ouverte
 const createhoraires_ouverte = asyncHandler(async (req, res) => {
   const { heure_matin	,heure_soir,jours	 } = req.body;
   await db.query("INSERT INTO horaires_ouverture (heure_matin	,heure_soir,jours	) VALUES (?,?,?)", [heure_matin	,heure_soir,jours	]);
   res.status(201).json({ message: "horaires_ouverture bien ajouter" });
 });
 
-// modifier une categorie
+// modifier une horaires_ouverte
 const updatehoraires_ouverte = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { jours,heure_matin,heure_soir } = req.body;
 
   const horaires_ouverte = await db.query("SELECT * FROM horaires_ouverture WHERE id=?", [id]);
 
@@ -38,13 +38,13 @@ const updatehoraires_ouverte = asyncHandler(async (req, res, next) => {
     return next(new apiError(`pas de horaires_ouverture pour ce id ${id}`, 400));
   }
 
-  await db.query("UPDATE horaires_ouverture SET name=? WHERE id=?", [name, id]);
+  await db.query("UPDATE horaires_ouverture SET jours=?,heure_matin=?,heure_soir=? WHERE id=?", [jours,heure_matin,heure_soir, id]);
   res
     .status(200)
-    .json({ message: `la categorie avec id ${id} est bien modifier` });
+    .json({ message: `l'horaires d'ouverture avec id ${id} est bien modifier` });
 });
 
-// suprimer une categorie
+// suprimer une horaires_ouverte
 const deletehoraires_ouverte = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await db.query("DELETE FROM horaires_ouverture WHERE id=?", [id]);

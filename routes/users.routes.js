@@ -10,10 +10,10 @@ const {
 } = require("../controllers/users.controllers.js");
 const { authorisation } = require("../controllers/auth.controllers");
 
-router.get("/", getUsers);
-router.post("/", createUser);
-router.get("/:id", getUser);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.get("/",authorisation("admin"), getUsers);
+router.post("/",authorisation("admin"), createUser);
+router.get("/:id",authorisation("admin"), getUser);
+router.put("/:id",authorisation("admin"), updateUser);
+router.delete("/:id",authorisation("admin"), deleteUser);
 
 module.exports = router;

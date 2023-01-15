@@ -48,9 +48,13 @@ const updateCategory = asyncHandler(async (req, res, next) => {
 const deleteCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await db.query("DELETE FROM categories WHERE id=?", [id]);
+  const categories = await db.query("SELECT * FROM categories");
   res
     .status(200)
-    .json({ message: `la categorie avec id ${id} est bien supprimer` });
+    .json({
+      message: `la categorie avec id ${id} est bien supprimer`,
+      data: categories,
+    });
 });
 
 // exporte crud les categories

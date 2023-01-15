@@ -6,9 +6,9 @@ const {authorisation} = require("../controllers/auth.controllers")
 
 
 router.get("/",getPhotos);
-router.post("/",galerieUploadImage,createPhoto);
+router.post("/",authorisation("admin"),galerieUploadImage,createPhoto);
 router.get("/:id",getPhoto);
-router.put("/:id",updatePhoto);
-router.delete("/:id",deletePhoto);
+router.post("/:id",authorisation("admin"),updatePhoto);
+router.delete("/:id",authorisation("admin"),deletePhoto);
 
 module.exports = router;

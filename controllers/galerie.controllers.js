@@ -46,34 +46,37 @@ const getPhoto = asyncHandler(async (req, res, next) => {
 // creer une image
 const createPhoto = asyncHandler(async (req, res) => {
   const { title,image } = req.body;
+  console.log(title, image);
   await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [title,image]);
   res.status(201).json({ message: "photo bien ajouter" });
 });
 
 // modifier une image
-const updatePhoto = asyncHandler(async (req, res, next) => {
+const updatePhoto = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { title,image } = req.body;
+  const plat = await db.query("SELECT * FROM galerie WHERE id=?", [id]);
 
-  const photo = await db.query("SELECT * FROM galerie WHERE id=?", [id]);
-
-  if (!photo[0]) {
-    return next(new apiError(`pas de galerie pour ce id ${id}`, 400));
+  if (!plat[0]) {
+    return next(new apiError(`pas de photo pour ce id ${id}`, 400));
   }
 
-  await db.query("UPDATE galerie SET title=? image=? WHERE id=?", [title,image, id]);
-  res
-    .status(200)
-    .json({ message: `la photo avec id ${id} est bien modifier` });
+  // await db.query("UPDATE galerie SET title=?,image=? WHERE id=?", [title,image, id]);
+  await db.query("INSERT INTO galerie (title,image) VALUES (?,?) WHERE id=?", [title,image,id]);
+  
+  res.status(200).json({ message: `la photo avec id ${id} est bien modifier` });
+
+  
 });
 
 // suprimer une image
 const deletePhoto = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await db.query("DELETE FROM galerie WHERE id=?", [id]);
+  const photos = await db.query("SELECT * FROM galerie LIMIT 3")
   res
     .status(200)
-    .json({ message: `la photo avec id ${id} est bien supprimer` });
+    .json({ message: `la photo avec id ${id} est bien supprimer`,data:photos });
 });
 
 // exporte crud galerie
@@ -84,4 +87,5 @@ module.exports = {
   updatePhoto,
   deletePhoto,
   galerieUploadImage
+  
 };

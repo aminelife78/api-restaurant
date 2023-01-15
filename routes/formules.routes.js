@@ -8,9 +8,9 @@ const {getFormules,getFormule,createFormule,updateFormule,deleteFormule} = requi
 
 
 router.get("/",getFormules);
-router.post("/",createFormule);
+router.post("/",authorisation("admin"),createFormule);
 router.get("/:id",getFormule);
-router.put("/:id",updateFormule);
-router.delete("/:id",deleteFormule);
+router.put("/:id",authorisation("admin"),updateFormule);
+router.delete("/:id",authorisation("admin"),deleteFormule);
 
 module.exports = router;

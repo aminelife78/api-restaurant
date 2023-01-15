@@ -5,6 +5,15 @@ const morgan = require("morgan");
 const cors = require('cors');
 
 const app = express();
+let session = require("express-session");
+
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 const corsOptions ={
   origin:'http://localhost:3000', 
@@ -38,6 +47,7 @@ const routeUsers = require("./routes/users.routes");
 const routeAuth = require("./routes/auth.routes");
 const routeGalerie = require("./routes/galerie.routes");
 const routeHoraires = require("./routes/horaires_ouverture.routes");
+const routeReservations = require("./routes/reservation.routes")
 app.get("/", (req, res) => {
   res.send("application web restaurant Ahmed Kitchen");
 });
@@ -53,6 +63,8 @@ app.use("/api/v1/users",routeUsers);
 app.use("/api/v1/auth",routeAuth);
 app.use("/api/v1/galerie",routeGalerie);
 app.use("/api/v1/horaires",routeHoraires);
+app.use("/api/v1/reservations",routeReservations);
+
 
 
 

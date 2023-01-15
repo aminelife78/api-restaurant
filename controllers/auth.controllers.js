@@ -69,9 +69,11 @@ const login = asyncHandler(async (req, res,next) => {
        
     }else{
       // jwt
-      const token = jwt.sign({userId:user[0].id},process.env.JWT_SECRET_KEY,{
+      const token = jwt.sign({userId:user[0].id,userRole:user[0].role},process.env.JWT_SECRET_KEY,{
         expiresIn: process.env.JWT_EXPIRATION
       })
+      req.session.user_id = user[0].id
+      console.log(req.session.user_id)
       const message = `L'utilisateur a été connecté avec succès`;
        return res.json({ message, data:user,token })
     }
@@ -102,6 +104,8 @@ return asyncHandler(async (req,res,next) => {
         return res.status(401).json({ message, data: error })
       }else{
         const userId = decodedToken.userId
+       
+        
         const currentUser = await db.query("SELECT * FROM users WHERE id=?",[userId])
         if(!currentUser[0]) {
           const message = `L'utilisateur n'existe pas pour ce token.`
@@ -110,7 +114,8 @@ return asyncHandler(async (req,res,next) => {
         if(!myRole.includes(currentUser[0].role)) {
           return next(new apiError("vous n'etes pas autorisé a éffectué cette tache"), 403) 
               
-        }              
+        }   
+              
         next()
       }
    
