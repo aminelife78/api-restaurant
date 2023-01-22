@@ -1,10 +1,14 @@
 const multer  = require('multer')
 const fs = require('fs'); // Added to create directories
+const cloudinary = require('cloudinary').v2
+
 
 const path = require('path');
 const db = require("../db/db");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
+
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -17,12 +21,17 @@ const storage = multer.diskStorage({
     
     const filename = `galerie-${Date.now()}-${Math.random() * 1E9}.${ext}`
     cb(null, filename)
-    req.body.image = filename
+    
       }
 })
 
 const upload = multer({ storage: storage })
 const galerieUploadImage = upload.single('image')
+cloudinary.config({
+  cloud_name:process.env.CLOUD_NAME,
+  api_key:process.env.API_KEY,
+  api_secret:process.env.API_SECRET 
+})
 
 
 // recuperer toutes les images 
@@ -45,10 +54,14 @@ const getPhoto = asyncHandler(async (req, res, next) => {
 
 // creer une image
 const createPhoto = asyncHandler(async (req, res) => {
-  const { title,image } = req.body;
-  console.log(title, image);
-  await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [title,image]);
+  const { title } = req.body;
+  console.log(title);
+  cloudinary.uploader.upload(req.file.path,async (err,result) => {
+    if(err) return console.log(err)
+    res.json(result.url)
+  await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [title,result.url]);
   res.status(201).json({ message: "photo bien ajouter" });
+  })
 });
 
 // modifier une image

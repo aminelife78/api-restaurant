@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
     const filename = `plat-${Date.now()}-${Math.random() * 1E9}.${ext}`
     cb(null, filename)
     req.body.image = filename
+    
   
   }
 })
@@ -52,9 +53,7 @@ const getPlat = asyncHandler(async (req, res, next) => {
 
 // creer une plat
 const createPlat = asyncHandler(async (req, res) => {
-  const { titre, descreption, prix, image, categories_id } = req.body;
-  console.log(image);
-
+  const { titre, descreption,image, prix, categories_id } = req.body;
   await db.query(
     "INSERT INTO plats (titre,	descreption,prix,image,categories_id) VALUES (?,?,?,?,?)",
     [titre, descreption, prix, image, categories_id]
