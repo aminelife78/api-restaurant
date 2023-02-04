@@ -17,14 +17,16 @@ const getMenu = asyncHandler(async (req, res, next) => {
   if (!menu[0]) {
     return next(new apiError(`pas de menus pour ce id ${id}`, 400));
   }
-  res.status(200).json({ result: menu });
+  res.status(200).json({ data: menu });
 });
 
 // creer une categorie
 const createMenu = asyncHandler(async (req, res) => {
   const { name } = req.body;
   await db.query("INSERT INTO menus (name) VALUES (?)", [name]);
-  res.status(201).json({ message: "menus bien ajouter" });
+  const menus = await db.query("SELECT * FROM menus");
+
+  res.status(201).json({ message: "menus bien ajouter",data:menus });
 });
 
 // modifier une categorie
@@ -39,18 +41,17 @@ const updateMenu = asyncHandler(async (req, res, next) => {
   }
 
   await db.query("UPDATE menus SET name=? WHERE id=?", [name, id]);
-  res
-    .status(200)
-    .json({ message: `le menu avec id ${id} est bien modifier` });
+  const menus = await db.query("SELECT * FROM menus");
+
+  res.status(200).json({ message: `le menu avec id ${id} est bien modifier`,data:menus });
 });
 
 // suprimer une categorie
 const deleteMenu = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await db.query("DELETE FROM menus WHERE id=?", [id]);
-  res
-    .status(200)
-    .json({ message: `le menu avec id ${id} est bien supprimer` });
+  const menus = await db.query("SELECT * FROM menus");
+  res.status(200).json({ message: `le menu avec id ${id} est bien supprimer`,data:menus });
 });
 
 // exporte crud les menus
