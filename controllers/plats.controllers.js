@@ -51,7 +51,7 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .toFile(`uploads/plats/${filename}`);
 
   // Save image into our db 
-   req.body.image = "http://localhost:5000/plats/" + filename;
+   req.body.image = "https://api-restaurant-production.up.railway.app/" + filename;
    console.log(req.hostname)
 
   next();
