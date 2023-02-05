@@ -1,61 +1,35 @@
 const multer  = require('multer')
-const { v4: uuidv4 } = require('uuid');
-const sharp = require('sharp');
-const  uploadSingleImage  = require('./multerUploadImages');
-
 const fs = require('fs'); // Added to create directories
 // const cloudinary = require('cloudinary').v2
 const uploadImage = require("./uploadImage");
-
 
 const path = require('path');
 const db = require("../db/db");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     fs.mkdir('./uploads/plats',(err)=>{
-//       cb(null, './uploads/plats');
-//    });
-//   },
-//   filename: function (req, file, cb) {
-//     const ext = file.mimetype.split('/')[1]
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    fs.mkdir('./uploads/plats',(err)=>{
+      cb(null, './uploads/plats');
+   });
+  },
+  filename: function (req, file, cb) {
+    const ext = file.mimetype.split('/')[1]
     
-//     const filename = `plat-${Date.now()}-${Math.random() * 1E9}.${ext}`
-//     cb(null, filename)
-//    req.body.image = filename
+    const filename = `plat-${Date.now()}-${Math.random() * 1E9}.${ext}`
+    cb(null, filename)
+   req.body.image = filename
     
   
-//   }
-// })
+  }
+})
 
-// const upload = multer({ storage: storage })
-// const platUploadImage = upload.single('image')
-// cloudinary.config({
-//   cloud_name:process.env.CLOUD_NAME,
-//   api_key:process.env.API_KEY,
-//   api_secret:process.env.API_SECRET 
-// })
+const upload = multer({ storage: storage })
+const platUploadImage = upload.single('image')
 
-// Upload single image
-const uploadPlatsImage = uploadSingleImage('image');
-// Image processing
-const resizeImage = asyncHandler(async (req, res, next) => {
-  const filename =  `plats-${uuidv4()}-${Date.now()}.jpeg`;
 
-  await sharp(req.file.buffer)
-    .resize(600, 600)
-    .toFormat('jpeg')
-    .jpeg({ quality: 95 })
-    .toFile(`uploads/plats/${filename}`);
 
-  // Save image into our db 
-   req.body.image = "https://api-restaurant-production.up.railway.app/" + filename;
-   console.log(req.hostname)
-
-  next();
-});
 
 // recuperer toutes les plats des plats
 const getPlats = asyncHandler(async (req, res) => {
@@ -87,15 +61,12 @@ const getPlat = asyncHandler(async (req, res, next) => {
 // creer une plat
 const createPlat = asyncHandler(async (req, res) => {
   const { titre, descreption, prix,image, categories_id } = req.body;
+  console.log(req.file)
+  let images = await uploadImage(req.file.path)
   
-  // let images = await uploadImage(req.file.path)
-  console.log(image)
-  
-  // console.log(req.hostname)
-  // let images = await cloudinary.uploader.upload(req.file.path)
     await db.query(
       "INSERT INTO plats (titre,descreption,prix,image,categories_id) VALUES (?,?,?,?,?)",
-      [titre, descreption, prix, image, categories_id]
+      [titre, descreption, prix, images, categories_id]
     );
        
       
@@ -141,8 +112,7 @@ module.exports = {
   createPlat,
   updatePlat,
   deleteplat,
-  uploadPlatsImage,
-  resizeImage
+  platUploadImage
   
   
 };
