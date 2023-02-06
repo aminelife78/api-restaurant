@@ -1,32 +1,33 @@
 const multer = require("multer");
 const fs = require("fs"); // Added to create directories
-const cloudinary = require("cloudinary").v2;
-
+const { v4: uuidv4 } = require("uuid");
+const sharp = require("sharp");
 const path = require("path");
 const db = require("../db/db");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
+const { uploadSingleImage } = require("../middlewares/multer");
+const handleUpload = require("../config/cloudinary");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    fs.mkdir("./uploads/galerie", (err) => {
-      cb(null, "./uploads/galerie");
-    });
-  },
-  filename: function (req, file, cb) {
-    const ext = file.mimetype.split("/")[1];
+// Upload single image
+const uploadGalerieImage = uploadSingleImage("image");
 
-    const filename = `galerie-${Date.now()}-${Math.random() * 1e9}.${ext}`;
-    cb(null, filename);
-  },
-});
+// Image processing
+const resizeImage = asyncHandler(async (req, res, next) => {
+  const filename = `galerie-${uuidv4()}-${Date.now()}.jpeg`;
 
-const upload = multer({ storage: storage });
-const galerieUploadImage = upload.single("image");
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+   await sharp(req.file.buffer)
+    .resize(600, 600)
+    .toFormat("jpeg")
+    .jpeg({ quality: 95 })
+    .toFile(`uploads/galerie/${filename}`);
+
+  // Save image into our db
+  
+
+  req.body.image = filename;
+
+  next();
 });
 
 // recuperer toutes les images
@@ -49,15 +50,16 @@ const getPhoto = asyncHandler(async (req, res, next) => {
 
 // creer une image
 const createPhoto = asyncHandler(async (req, res) => {
-  const { title } = req.body;
-  
-  const images = await cloudinary.uploader.upload(req.file.path);
-  console.log("milieu")
+  const { title, image } = req.body;
+  // let result = await handleUpload(image);
+  // const images = await cloudinary.uploader.upload(req.file.path);
   await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [
     title,
-    images.url,
+    image,
   ]);
-console.log("end")
+  
+
+  const photos = await db.query("SELECT * FROM galerie LIMIT 3");
 
   res.status(201).json({ message: "photo bien ajouter", data: photos });
 });
@@ -71,19 +73,17 @@ const updatePhoto = asyncHandler(async (req, res) => {
   if (!plat[0]) {
     return next(new apiError(`pas de photo pour ce id ${id}`, 400));
   }
-  const result = await cloudinary.uploader.upload(req.file.path);
+  // const result = await cloudinary.uploader.upload(req.file.path);
   await db.query("UPDATE galerie SET title=?,image=? WHERE id=?", [
     title,
-    result.url,
+    image,
     id,
   ]);
   const photos = await db.query("SELECT * FROM galerie LIMIT 3");
-  res
-    .status(200)
-    .json({
-      message: `la photo avec id ${id} est bien modifier`,
-      data: photos,
-    });
+  res.status(200).json({
+    message: `la photo avec id ${id} est bien modifier`,
+    data: photos,
+  });
 });
 
 // suprimer une image
@@ -91,12 +91,10 @@ const deletePhoto = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await db.query("DELETE FROM galerie WHERE id=?", [id]);
   const photos = await db.query("SELECT * FROM galerie LIMIT 3");
-  res
-    .status(200)
-    .json({
-      message: `la photo avec id ${id} est bien supprimer`,
-      data: photos,
-    });
+  res.status(200).json({
+    message: `la photo avec id ${id} est bien supprimer`,
+    data: photos,
+  });
 });
 
 // exporte crud galerie
@@ -106,5 +104,6 @@ module.exports = {
   createPhoto,
   updatePhoto,
   deletePhoto,
-  galerieUploadImage,
+  uploadGalerieImage,
+  resizeImage,
 };

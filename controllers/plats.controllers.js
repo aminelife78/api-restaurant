@@ -1,7 +1,6 @@
 const multer  = require('multer')
 const fs = require('fs'); // Added to create directories
-// const cloudinary = require('cloudinary').v2
-const uploadImage = require("./uploadImage");
+
 
 const path = require('path');
 const db = require("../db/db");
@@ -20,7 +19,7 @@ const storage = multer.diskStorage({
     const filename = `plat-${Date.now()}-${Math.random() * 1E9}.${ext}`
     cb(null, filename)
     console.log(filename)
-   req.body.image =  filename
+   req.body.image =  process.env.baseUrl + "/plats/" +  filename
     
   
   }
@@ -28,7 +27,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 const platUploadImage = upload.single('image')
-
 
 
 
