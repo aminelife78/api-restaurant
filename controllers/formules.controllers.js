@@ -30,11 +30,9 @@ const createFormule = asyncHandler(async (req, res) => {
     "INSERT INTO formules (title,	descreption,prix,menus_id) VALUES (?,?,?,?)",
     [title, descreption, prix, menus_id]
   );
-  const formules = await db.query(
-    "SELECT formules.id ,title,descreption,prix,name FROM formules INNER JOIN menus ON menus.id = formules.menus_id"
-  );
 
-  res.status(201).json({ message: "formules bien ajouter", data: formules });
+
+  res.status(201).json({ message: "formules bien ajouter" });
 });
 
 // modifier une formule
@@ -52,13 +50,11 @@ const updateFormule = asyncHandler(async (req, res, next) => {
     "UPDATE formules SET title=?, descreption=?, prix=?, menus_id=? WHERE id=?",
     [title, descreption, prix, menus_id, id]
   );
-  const formules = await db.query(
-    "SELECT formules.id ,title,descreption,prix,name FROM formules INNER JOIN menus ON menus.id = formules.menus_id"
-  );
+ 
 
   res.status(200).json({
     message: `le Formule avec id ${id} est bien modifier`,
-    data: formules,
+    
   });
 });
 
@@ -66,13 +62,11 @@ const updateFormule = asyncHandler(async (req, res, next) => {
 const deleteFormule = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await db.query("DELETE FROM formules WHERE id=?", [id]);
-  const formules = await db.query(
-    "SELECT formules.id ,title,descreption,prix,name FROM formules INNER JOIN menus ON menus.id = formules.menus_id"
-  );
+ 
 
   res.status(200).json({
     message: `le Formule avec id ${id} est bien supprimer`,
-    data: formules,
+    
   });
 });
 

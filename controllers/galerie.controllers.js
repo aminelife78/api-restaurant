@@ -2,12 +2,12 @@ const multer = require("multer");
 const fs = require("fs"); // Added to create directories
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
+
 const path = require("path");
 const db = require("../db/db");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
 const { uploadSingleImage } = require("../middlewares/multer");
-const handleUpload = require("../config/cloudinary");
 
 // Upload single image
 const uploadGalerieImage = uploadSingleImage("image");
@@ -16,16 +16,20 @@ const uploadGalerieImage = uploadSingleImage("image");
 const resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `galerie-${uuidv4()}-${Date.now()}.jpeg`;
 
-   await sharp(req.file.buffer)
-    .resize(600, 600)
+  await sharp(req.file.buffer)
+    .resize(400, 400)
     .toFormat("jpeg")
-    .jpeg({ quality: 95 })
+    .jpeg({ quality: 50 })
     .toFile(`uploads/galerie/${filename}`);
 
-  // Save image into our db
-  
+  // const b64 = Buffer.from(req.file.buffer).toString("base64");
+  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  // const cldRes = await handleUpload(dataURI);
 
-  req.body.image = filename;
+  // Save image into our db
+
+  console.log(req.file);
+  req.body.image = process.env.BASE_URL + "/galerie/" + filename;
 
   next();
 });
@@ -57,11 +61,8 @@ const createPhoto = asyncHandler(async (req, res) => {
     title,
     image,
   ]);
-  
 
-  const photos = await db.query("SELECT * FROM galerie LIMIT 3");
-
-  res.status(201).json({ message: "photo bien ajouter", data: photos });
+  res.status(201).json({ message: "photo bien ajouter" });
 });
 
 // modifier une image
@@ -73,16 +74,13 @@ const updatePhoto = asyncHandler(async (req, res) => {
   if (!plat[0]) {
     return next(new apiError(`pas de photo pour ce id ${id}`, 400));
   }
-  // const result = await cloudinary.uploader.upload(req.file.path);
   await db.query("UPDATE galerie SET title=?,image=? WHERE id=?", [
     title,
     image,
     id,
   ]);
-  const photos = await db.query("SELECT * FROM galerie LIMIT 3");
   res.status(200).json({
     message: `la photo avec id ${id} est bien modifier`,
-    data: photos,
   });
 });
 
@@ -90,10 +88,8 @@ const updatePhoto = asyncHandler(async (req, res) => {
 const deletePhoto = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await db.query("DELETE FROM galerie WHERE id=?", [id]);
-  const photos = await db.query("SELECT * FROM galerie LIMIT 3");
   res.status(200).json({
     message: `la photo avec id ${id} est bien supprimer`,
-    data: photos,
   });
 });
 
