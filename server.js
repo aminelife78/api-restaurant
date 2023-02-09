@@ -22,6 +22,9 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+
+app.use(express.static(path.join(__dirname, '/public')));
+
 const globalError = require("./middlewares/errorMidlleware");
 const apiError = require("./utils/apiError");
 
