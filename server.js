@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
-const cors = require('cors');
+const cors = require("cors");
 
 const app = express();
 let session = require("express-session");
@@ -15,27 +15,23 @@ app.use(
   })
 );
 
-
-
-const corsOptions ={
-  origin:'http://localhost:3000', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200
-}
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 app.use(cors(corsOptions));
-app.use(express.static("../front-ecf-restaurant/restaurant/build"))
 const globalError = require("./middlewares/errorMidlleware");
 const apiError = require("./utils/apiError");
 
 dotenv.config({ path: "config.env" });
-
 
 if (process.env.NODE_ENV === "undefined") {
   app.use(morgan("dev"));
 }
 
 //chemin statique
-app.use(express.static(path.join(__dirname,"uploads")))
+app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,29 +45,22 @@ const routeUsers = require("./routes/users.routes");
 const routeAuth = require("./routes/auth.routes");
 const routeGalerie = require("./routes/galerie.routes");
 const routeHoraires = require("./routes/horaires_ouverture.routes");
-const routeReservations = require("./routes/reservation.routes")
+const routeReservations = require("./routes/reservation.routes");
 app.get("/", (req, res) => {
   res.send("application web restaurant Ahmed Kitchen");
 });
 
-
 //  routes middleware
 
-app.use("/api/v1/categories",routeCategories);
-app.use("/api/v1/plats",routePlats);
-app.use("/api/v1/menus",routeMenus);
-app.use("/api/v1/formules",routeFormules);
-app.use("/api/v1/users",routeUsers);
-app.use("/api/v1/auth",routeAuth);
-app.use("/api/v1/galerie",routeGalerie);
-app.use("/api/v1/horaires",routeHoraires);
-app.use("/api/v1/reservations",routeReservations);
-
-
-
-
-
-
+app.use("/api/v1/categories", routeCategories);
+app.use("/api/v1/plats", routePlats);
+app.use("/api/v1/menus", routeMenus);
+app.use("/api/v1/formules", routeFormules);
+app.use("/api/v1/users", routeUsers);
+app.use("/api/v1/auth", routeAuth);
+app.use("/api/v1/galerie", routeGalerie);
+app.use("/api/v1/horaires", routeHoraires);
+app.use("/api/v1/reservations", routeReservations);
 
 // create l'erreur avec apiError si le route n'existe pas!
 app.all("*", (req, res, next) => {
@@ -80,7 +69,6 @@ app.all("*", (req, res, next) => {
 
 // global error handiling middleware for express
 app.use(globalError);
-
 
 // port recuperer depuis config.env
 const port = process.env.PORT || 5000;
