@@ -50,6 +50,8 @@ const routeAuth = require("./routes/auth.routes");
 const routeGalerie = require("./routes/galerie.routes");
 const routeHoraires = require("./routes/horaires_ouverture.routes");
 const routeReservations = require("./routes/reservation.routes");
+const routeTables = require("./routes/tables.routes");
+
 app.get("/", (req, res) => {
   res.send("application web restaurant Ahmed Kitchen");
 });
@@ -65,6 +67,7 @@ app.use("/api/v1/auth", routeAuth);
 app.use("/api/v1/galerie", routeGalerie);
 app.use("/api/v1/horaires", routeHoraires);
 app.use("/api/v1/reservations", routeReservations);
+app.use("/api/v1/tables", routeTables);
 
 // create l'erreur avec apiError si le route n'existe pas!
 app.all("*", (req, res, next) => {

@@ -102,7 +102,7 @@ return asyncHandler(async (req,res,next) => {
       if(error) {
         const message = `L'utilisateur n'est pas autorisé à accèder à cette ressource.`
         return res.status(401).json({ message, data: error })
-      }else{
+      }
         const userId = decodedToken.userId
        
         
@@ -115,7 +115,6 @@ return asyncHandler(async (req,res,next) => {
           return next(new apiError("vous n'etes pas autorisé a éffectué cette tache"), 403) 
               
         }   
-              
         next()
       }
    
@@ -123,7 +122,7 @@ return asyncHandler(async (req,res,next) => {
         
 
       
-})
+)
 
 
 })}
