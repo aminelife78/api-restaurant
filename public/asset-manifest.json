@@ -1,20 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.c517570a.css",
-    "main.js": "/static/js/main.7c7abcdc.js",
+    "main.css": "/static/css/main.3f0ed12f.css",
+    "main.js": "/static/js/main.fff778aa.js",
     "static/js/787.aab8bd84.chunk.js": "/static/js/787.aab8bd84.chunk.js",
-    "static/media/header.WebP": "/static/media/header.43df942162e4e39a7e29.WebP",
+    "static/media/header.WebP": "/static/media/header.6a642532b3cedb4c78c8.WebP",
+    "static/media/imgTitle1.jpg": "/static/media/imgTitle1.f25200ecd65cf9d1faac.jpg",
     "static/media/histoire.WebP": "/static/media/histoire.b1063427bcea088e40db.WebP",
     "static/media/footer.WebP": "/static/media/footer.6094b5eafe901d88ae4f.WebP",
-    "static/media/imgTitle1.jpg": "/static/media/imgTitle1.00128785df2f0ab133dd.jpg",
     "static/media/logo.svg": "/static/media/logo.d9cbaa0cbe7e8802b1f8209fc732ea78.svg",
+    "static/media/mariage.png": "/static/media/mariage.9dfd1b7ff9f67e530321.png",
+    "static/media/anniverssaire.png": "/static/media/anniverssaire.13ab63c83cf9a6e2d70b.png",
     "index.html": "/index.html",
-    "main.c517570a.css.map": "/static/css/main.c517570a.css.map",
-    "main.7c7abcdc.js.map": "/static/js/main.7c7abcdc.js.map",
+    "main.3f0ed12f.css.map": "/static/css/main.3f0ed12f.css.map",
+    "main.fff778aa.js.map": "/static/js/main.fff778aa.js.map",
     "787.aab8bd84.chunk.js.map": "/static/js/787.aab8bd84.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c517570a.css",
-    "static/js/main.7c7abcdc.js"
+    "static/css/main.3f0ed12f.css",
+    "static/js/main.fff778aa.js"
   ]
 }
