@@ -69,8 +69,7 @@ const login = asyncHandler(async (req, res, next) => {
 
   const isPasswordValid = await bcrypt.compare(password, user[0].password);
 
-  console.log(isPasswordValid);
-  if (!isPasswordValid) {
+  if (isPasswordValid) {
     const message = "Email ou mot de passe  est incorrecte.";
     return res.status(404).json({ message });
   } else {
