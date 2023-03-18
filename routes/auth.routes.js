@@ -10,7 +10,7 @@ const {
 
 
 router.post("/register",signupValidator,register);
-router.post("/login",loginValidator,login);
+router.post("/login",login);
 router.post("/contact",contact);
 router.post("/forgotPassword",forgotPassword);
 router.post("/verifyResetCode",verifyPassResetCode);
