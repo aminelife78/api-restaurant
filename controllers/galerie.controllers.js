@@ -36,7 +36,7 @@ const resizeImage = asyncHandler(async (req, res, next) => {
 
 // recuperer toutes les images
 const getPhotos = asyncHandler(async (req, res) => {
-  const photos = await db.query("SELECT * FROM galerie LIMIT 3");
+  const photos = await db.query("SELECT * FROM galerie LIMIT 8");
   const countPhotos = photos.length;
   res.status(200).json({ result: countPhotos, data: photos });
 });

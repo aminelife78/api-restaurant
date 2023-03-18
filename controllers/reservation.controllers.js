@@ -3,27 +3,35 @@ let session = require("express-session");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
 const { authorisation } = require("../controllers/auth.controllers");
+const moment = require("moment");
+const sendEmail = require("../utils/sendEmail");
 
 // recuperer toutes les reservations des plats
 const getReservations = asyncHandler(async (req, res) => {
-  const {rDate,rHeure,rCouverts} = req.query
-  console.log(parseInt(rCouverts))
-  
-  if(parseInt(rCouverts) ) {
-    const reservations = await db.query("select r.id,r.date,r.heure,r.nombre_couverts,r.allergies,u.username,u.phone,u.nombre_convives,u.email from reservations as r LEFT JOIN  users as u ON r.clients_id = u.id WHERE nombre_couverts =?  ",[parseInt(rCouverts)]);
-     res.status(200).json({ data: reservations });
-  }else if(rDate){
-    const reservations = await db.query("select  r.id, r.date,r.heure,r.nombre_couverts,r.allergies,u.username,u.phone,u.nombre_convives,u.email from reservations as r LEFT JOIN  users as u ON r.clients_id = u.id WHERE date =?  ",[rDate]);
-     res.status(200).json({ data: reservations });
-  }else if(rHeure){
-    const reservations = await db.query("select  r.id, r.date,r.heure,r.nombre_couverts,r.allergies,u.username,u.phone,u.nombre_convives,u.email from reservations as r LEFT JOIN  users as u ON r.clients_id = u.id WHERE heure =?  ",[rHeure]);
-     res.status(200).json({ data: reservations });
-  }
-  else{
-    const reservations = await db.query("select   r.id, r.date,r.heure,r.nombre_couverts,r.allergies,u.username,u.phone,u.nombre_convives,u.email from reservations as r LEFT JOIN  users as u ON r.clients_id = u.id");
+  // const reservations = await db.query("select r.id,r.date,r.heure,r.nombre_couverts,r.allergies,u.username,u.phone,u.nombre_convives,u.email from reservations as r LEFT JOIN  users as u ON r.clients_id = u.id WHERE nombre_couverts =?  ",[parseInt(rCouverts)]);
+  //    res.status(200).json({ data: reservations });
+  const { date, heure } = req.query;
+  const dateLocale = moment(date).format("YYYY-MM-DD");
+
+  if (dateLocale && heure) {
+    const max_couverts = await db.query(
+      "SELECT nbr_convive from tables WHERE time=?",
+      [heure]
+    );
+    const reservations = await db.query(
+      "select sum(nombre_couverts) from reservations where date=? AND heure=?",
+      [dateLocale, heure]
+    );
+    const reservationDispo = Number(
+      max_couverts[0].nbr_convive - reservations[0]["sum(nombre_couverts)"]
+    );
+    res
+      .status(200)
+      .json({ couvertDispo: reservationDispo, data: reservations });
+  } else {
+    const reservations = await db.query("select * from reservations ");
     res.status(200).json({ data: reservations });
   }
-  
 });
 
 // recuperer une seul reservation
@@ -41,40 +49,72 @@ const getReservation = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: reservation });
 });
 
-// creer une categorie
+// creer une reservation
 const createReservation = asyncHandler(async (req, res, next) => {
-  const { nombre_couverts, date, heure, allergies, visiteur_id, clients_id } =
-    req.body;
+  const {
+    nom,
+    email,
+    phone,
+    nombre_couverts,
+    date,
+    heure,
+    allergies,
+    visiteur_id,
+    clients_id,
+  } = req.body;
+  const dateLocale = moment(date).format("YYYY-MM-DD");
+  const heures = heure.toString();
+  const max_couverts = await db.query(
+    "SELECT nbr_convive from tables WHERE time=?",
+    [heure]
+  );
+
   const table_disponible = await db.query(
     "SELECT SUM(nombre_couverts) as total FROM reservations WHERE date = ? AND heure = ?",
     [date, heure]
   );
-  const total_reservation_heure = table_disponible[0].total;
-  console.log(total_reservation_heure);
-  console.log(Number(nombre_couverts) + Number(total_reservation_heure));
-  if (Number(nombre_couverts) + Number(total_reservation_heure) > 12) {
-    return next(new apiError(`pas de table disponible pour cette date`, 400));
+  const total_reservation_heure = Number(table_disponible[0].total);
+
+  if (
+    Number(nombre_couverts) + Number(total_reservation_heure) >
+    max_couverts[0].nbr_convive
+  ) {
+    return next(
+      new apiError(
+        `Nombre de couverts non disponibles pour le ${dateLocale} à ${heure}`,
+        400
+      )
+    );
   } else {
-    if (authorisation("client")) {
-      await db.query(
-        "INSERT INTO reservations (nombre_couverts,date,heure,allergies,clients_id) VALUES (?,?,?,?,?)",
-        [nombre_couverts, date, heure, allergies, clients_id]
-      );
-      res.status(200).json({ message: "reservation bien ajouter" });
-    } else {
-      await db.query(
-        "INSERT INTO reservations (nombre_couverts,date,heure,allergies,clients_id) VALUES (?,?,?,?,?)",
-        [nombre_couverts, date, heure, allergies, visiteur_id]
-      );
-      res.status(200).json({ message: "reservation bien ajouter" });
-    }
+    await db.query(
+      "INSERT INTO reservations (nom,email,phone,nombre_couverts,date,heure,allergies) VALUES (?,?,?,?,?,?,?)",
+      [nom, email, phone, nombre_couverts, dateLocale, heure, allergies]
+    );
+    const message = `Cher(e) ${nom},\n Nous vous remercions de votre demande de réservation au Ahmed Kitchen pour ${dateLocale} à ${heure}. Nous vous réservons une table pour ${nombre_couverts} personnes, à ${heure} le ${dateLocale}, comme demandé. Nous sommes impatients de vous accueillir et de vous faire découvrir notre cuisine.\n \n En attendant votre visite, n'hésitez pas à consulter notre menu sur notre site web, ainsi que nos offres spéciales pour des événements particuliers.\n Cordialement,\n Ahmed Zeyd`;
+    sendEmail({
+      mail: "E-chiken App <aminelife93@gmail.com>",
+      email: email,
+      subject: "Confirmation de réservation de table au restaurant",
+      message: message,
+    });
+    res.status(200).json({ message: "reservation bien ajouter" });
   }
 });
 
-// modifier une categorie
+// modifier une reservation
 const updateReservation = asyncHandler(async (req, res, next) => {
+  const {
+    nombre_couverts,
+    date,
+    heure,
+    allergies,
+    nom,
+    phone,
+    email,
+    visiteur_id,
+    clients_id,
+  } = req.body;
   const { id } = req.params;
-  const { name } = req.body;
 
   const Reservation = await db.query("SELECT * FROM reservations WHERE id=?", [
     id,
@@ -84,7 +124,10 @@ const updateReservation = asyncHandler(async (req, res, next) => {
     return next(new apiError(`pas de reservations pour ce id ${id}`, 400));
   }
 
-  await db.query("UPDATE reservations SET name=? WHERE id=?", [name, id]);
+  await db.query(
+    "UPDATE reservations SET nom=?,email=?,phone=?,nombre_couverts=?,allergies=?,date=?,heure=? WHERE id=?",
+    [nombre_couverts, date, heure, allergies, nom, phone, email, id]
+  );
   res
     .status(200)
     .json({ message: `la categorie avec id ${id} est bien modifier` });
@@ -96,7 +139,6 @@ const deleteReservation = asyncHandler(async (req, res) => {
   await db.query("DELETE FROM reservations WHERE id=?", [id]);
   res.status(200).json({
     message: `la categorie avec id ${id} est bien supprimer`,
-    
   });
 });
 

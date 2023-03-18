@@ -4,7 +4,7 @@ const apiError = require("../utils/apiError");
 
 // recuperer toutes les tables
 const getTables = asyncHandler(async (req, res) => {
-  const tables = await db.query("SELECT * FROM tables");
+  const tables = await db.query("SELECT * FROM tables order by time asc");
   const countTables = tables.length;
   res.status(200).json({ result: countTables, data: tables });
 });
@@ -22,17 +22,17 @@ const getTable = asyncHandler(async (req, res, next) => {
 
 // creer une table
 const createTable = asyncHandler(async (req, res) => {
-  const { numero_table,capacite,disponible } = req.body;
-  await db.query("INSERT INTO tables (numero_table,capacite,disponible) VALUES (?,?,?)", [numero_table,capacite,disponible]);
+  const { nbr_convive,time,temps } = req.body;
+  await db.query("INSERT INTO tables (nbr_convive,time,temps) VALUES (?,?,?)", [nbr_convive,time,temps]);
   res
     .status(201)
-    .json({ message: "tables bien ajouter" });
+    .json({ message: "table bien ajouter" });
 });
 
 // modifier une table
 const updateTable = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const { numero_table,capacite,disponible } = req.body;
+  const { nbr_convive,time } = req.body;
 
   const Table = await db.query("SELECT * FROM tables WHERE id=?", [id]);
 
@@ -40,7 +40,7 @@ const updateTable = asyncHandler(async (req, res, next) => {
     return next(new apiError(`pas de tables pour ce id ${id}`, 400));
   }
 
-  await db.query("UPDATE tables SET numero_table=?,capacite=?,disponible=? WHERE id=?", [numero_table,capacite,disponible, id]);
+  await db.query("UPDATE tables SET nbr_convive=?,time=? WHERE id=?", [nbr_convive,time, id]);
 
   res
     .status(200)

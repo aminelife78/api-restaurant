@@ -18,21 +18,21 @@ const getUser = asyncHandler(async (req, res, next) => {
   if (!user[0]) {
     return next(new apiError(`pas de users pour ce id ${id}`, 400));
   }
-  res.status(200).json({ result: user });
+  res.status(200).json({ data: user });
 });
 
 // creer un user
 const createUser = asyncHandler(async (req, res) => {
-  const { username,email,password,role,nombre_convives,phone } = req.body;
+  const { username,email,password,role,nombre_convives,phone,allergies } = req.body;
   const hash = await bcrypt.hash(password, 10);
-  await db.query("INSERT INTO users (username,email,password,role,nombre_convives,phone) VALUES (?,?,?,?,?,?)", [username,email,hash,role,nombre_convives,phone]);
+  await db.query("INSERT INTO users (username,email,password,role,nombre_convives,phone,allergies) VALUES (?,?,?,?,?,?,?)", [username,email,hash,role,nombre_convives,phone,allergies]);
   res.status(201).json({ message: "users bien ajouter" });
 });
 
 // modifier un user
 const updateUser = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const { username,email,password,role,nombre_convives,phone } = req.body;
+  const { username,email,password,role,nombre_convives,phone,allergies } = req.body;
 
   const User = await db.query("SELECT * FROM users WHERE id=?", [id]);
 
@@ -40,7 +40,7 @@ const updateUser = asyncHandler(async (req, res, next) => {
     return next(new apiError(`pas de users pour ce id ${id}`, 400));
   }
   const hash = await bcrypt.hash(password, 10);
-  await db.query("UPDATE users SET username=?,email=?,password=?,role=?,nombre_convives=?,phone=? WHERE id=?", [username,email,hash,role,nombre_convives,phone, id]);
+  await db.query("UPDATE users SET username=?,email=?,password=?,role=?,nombre_convives=?,phone=?,allergies=? WHERE id=?", [username,email,hash,role,nombre_convives,phone,allergies, id]);
   res
     .status(200)
     .json({ message: `le User avec id ${id} est bien modifier` });
