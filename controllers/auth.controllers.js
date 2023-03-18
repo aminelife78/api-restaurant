@@ -9,7 +9,7 @@ const moment = require("moment");
 
 // inscréption
 const register = asyncHandler(async (req, res, next) => {
-  const { username, email, password, nombre_convives, phone,role, allergies } =
+  const { username, email, password, nombre_convives, phone, allergies } =
     req.body;
   // 1 verifier si l'email existe deja?
   const countEmail = await db.query(
@@ -31,8 +31,8 @@ const register = asyncHandler(async (req, res, next) => {
 
   // creer user
   await db.query(
-    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies,role) VALUES (?,?,?,?,?,?,?)",
-    [username, email, hash, nombre_convives, phone, allergies,role]
+    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies) VALUES (?,?,?,?,?,?)",
+    [username, email, hash, nombre_convives, phone, allergies]
   );
 
   const user = await db.query("SELECT * FROM users WHERE email=?", [email]);
@@ -69,7 +69,8 @@ const login = asyncHandler(async (req, res, next) => {
 
   const isPasswordValid = await bcrypt.compare(password, user[0].password);
 
-  if (isPasswordValid) {
+  console.log(isPasswordValid);
+  if (!isPasswordValid) {
     const message = "Email ou mot de passe  est incorrecte.";
     return res.status(404).json({ message });
   } else {
@@ -179,7 +180,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   // 3 envoyer le code par email
   const message = `Bonjour ${user[0].username},\n Nous avons reçu une demande de réinitialisation du mot de passe sur votre compte E-chicken. \n ${resetCode} \n Entrez ce code pour terminer la réinitialisation. \n Merci de nous aider à sécuriser votre compte.\n L'équipe E-chiken`;
-   sendEmail({
+  await sendEmail({
     mail: "E-chiken App <aminelife93@gmail.com>",
     email: email,
     subject: "votre mot de passe reset code (valide pour 10 min)",

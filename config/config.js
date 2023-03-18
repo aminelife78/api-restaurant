@@ -1,6 +1,6 @@
 let config;
-if (process.env.NODE_ENV == "production") {
-  config = process.env.CLEARDB_DATABASE_URL;
+if (process.env.NODE_ENV=='production') {
+  config = process.env.MYSQL_URL
 } else {
   config = {
     host: process.env.DB_HOST,
