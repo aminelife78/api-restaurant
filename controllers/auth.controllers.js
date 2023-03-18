@@ -9,7 +9,7 @@ const moment = require("moment");
 
 // inscréption
 const register = asyncHandler(async (req, res, next) => {
-  const { username, email, password, nombre_convives, phone, allergies } =
+  const { username, email, password, nombre_convives, phone,role, allergies } =
     req.body;
   // 1 verifier si l'email existe deja?
   const countEmail = await db.query(
@@ -31,8 +31,8 @@ const register = asyncHandler(async (req, res, next) => {
 
   // creer user
   await db.query(
-    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies) VALUES (?,?,?,?,?,?)",
-    [username, email, hash, nombre_convives, phone, allergies]
+    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies,role) VALUES (?,?,?,?,?,?,?)",
+    [username, email, hash, nombre_convives, phone, allergies,role]
   );
 
   const user = await db.query("SELECT * FROM users WHERE email=?", [email]);

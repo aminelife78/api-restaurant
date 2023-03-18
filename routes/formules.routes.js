@@ -8,7 +8,7 @@ const {getFormuleValidator,createFormuleValidator,updateFormuleValidator,deleteF
 
 
 router.get("/",getFormules);
-router.post("/",createFormuleValidator,createFormule);
+router.post("/",authorisation("admin"),createFormuleValidator,createFormule);
 router.get("/:id",getFormuleValidator,getFormule);
 router.put("/:id",authorisation("admin"),updateFormuleValidator,updateFormule);
 router.delete("/:id",authorisation("admin"),deleteFormuleValidator,deleteFormule);
