@@ -1,6 +1,6 @@
 let config;
 if (process.env.NODE_ENV=='production') {
-  config = process.env.MYSQL_URL
+  config = process.env.JAWSDB_MARIA_URL
 } else {
   config = {
     host: process.env.DB_HOST,

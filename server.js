@@ -23,6 +23,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// recuperation chemin build pour le deployement
 app.use(express.static(path.join(__dirname, '/public')));
 
 const globalError = require("./middlewares/errorMidlleware");
