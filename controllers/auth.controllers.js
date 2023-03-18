@@ -181,7 +181,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   // 3 envoyer le code par email
   const message = `Bonjour ${user[0].username},\n Nous avons reçu une demande de réinitialisation du mot de passe sur votre compte E-chicken. \n ${resetCode} \n Entrez ce code pour terminer la réinitialisation. \n Merci de nous aider à sécuriser votre compte.\n L'équipe E-chiken`;
   await sendEmail({
-    mail: "E-chiken App <aminelife93@gmail.com>",
+    mail: "E-chiken App <ahmedkitchen238@gmail.com>",
     email: email,
     subject: "votre mot de passe reset code (valide pour 10 min)",
     message: message,
@@ -275,7 +275,7 @@ const contact = asyncHandler(async (req, res, next) => {
   await sendEmail({
     prenom,
     mail,
-    email: "E-chiken App <aminelife93@gmail.com>",
+    email: "E-chiken App <ahmedkitchen238@gmail.com>",
     subject,
     html: `<p>From: ${prenom}</p><p>Email: ${mail}</p><p>Message: ${message}</p>`,
   });

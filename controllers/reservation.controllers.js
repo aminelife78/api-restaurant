@@ -92,7 +92,7 @@ const createReservation = asyncHandler(async (req, res, next) => {
     );
     const message = `Cher(e) ${nom},\n Nous vous remercions de votre demande de réservation au Ahmed Kitchen pour ${dateLocale} à ${heure}. Nous vous réservons une table pour ${nombre_couverts} personnes, à ${heure} le ${dateLocale}, comme demandé. Nous sommes impatients de vous accueillir et de vous faire découvrir notre cuisine.\n \n En attendant votre visite, n'hésitez pas à consulter notre menu sur notre site web, ainsi que nos offres spéciales pour des événements particuliers.\n Cordialement,\n Ahmed Zeyd`;
     sendEmail({
-      mail: "E-chiken App <aminelife93@gmail.com>",
+      mail: "E-chiken App <ahmedkitchen238@gmail.com>",
       email: email,
       subject: "Confirmation de réservation de table au restaurant",
       message: message,
