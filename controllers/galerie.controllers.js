@@ -2,6 +2,7 @@ const multer = require("multer");
 const fs = require("fs"); // Added to create directories
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
+const handleUpload = require("../config/cloudinary")
 
 const path = require("path");
 const db = require("../db/db");
@@ -22,13 +23,15 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .jpeg({ quality: 50 })
     .toFile(`uploads/galerie/${filename}`);
 
-  // const b64 = Buffer.from(req.file.buffer).toString("base64");
-  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-  // const cldRes = await handleUpload(dataURI);
+  const b64 = Buffer.from(req.file.buffer).toString("base64");
+  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  const cldRes = await handleUpload(dataURI);
+  console.log(cldRes)
+  req.body.image = cldRes.url
 
   // Save image into our db
 
-  req.body.image = process.env.BASE_URL + "/galerie/" + filename;
+  // req.body.image = process.env.BASE_URL + "/galerie/" + filename;
 
   next();
 });
@@ -54,7 +57,7 @@ const getPhoto = asyncHandler(async (req, res, next) => {
 // creer une image
 const createPhoto = asyncHandler(async (req, res) => {
   const { title, image } = req.body;
-  // let result = await handleUpload(image);
+  // let images = await handleUpload(req.file.path);
   // const images = await cloudinary.uploader.upload(req.file.path);
   await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [
     title,

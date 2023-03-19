@@ -9,7 +9,7 @@ const moment = require("moment");
 
 // inscréption
 const register = asyncHandler(async (req, res, next) => {
-  const { username, email, password, nombre_convives, phone, allergies } =
+  const { username, email, password, nombre_convives, phone, allergies, role } =
     req.body;
   // 1 verifier si l'email existe deja?
   const countEmail = await db.query(
@@ -31,8 +31,8 @@ const register = asyncHandler(async (req, res, next) => {
 
   // creer user
   await db.query(
-    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies) VALUES (?,?,?,?,?,?)",
-    [username, email, hash, nombre_convives, phone, allergies]
+    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies,role) VALUES (?,?,?,?,?,?,?)",
+    [username, email, hash, nombre_convives, phone, allergies, role]
   );
 
   const user = await db.query("SELECT * FROM users WHERE email=?", [email]);
@@ -69,7 +69,6 @@ const login = asyncHandler(async (req, res, next) => {
 
   const isPasswordValid = await bcrypt.compare(password, user[0].password);
 
-  console.log(isPasswordValid);
   if (!isPasswordValid) {
     const message = "Email ou mot de passe  est incorrecte.";
     return res.status(404).json({ message });
