@@ -23,10 +23,9 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .jpeg({ quality: 50 })
     .toFile(`uploads/galerie/${filename}`);
 
-  const b64 = Buffer.from(req.file.buffer).toString("base64");
+  const b64 =  Buffer.from(req.file.buffer).toString("base64");
   let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
   const cldRes = await handleUpload(dataURI);
-  console.log(cldRes)
   req.body.image = cldRes.url
 
   // Save image into our db
