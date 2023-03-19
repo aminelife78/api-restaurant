@@ -8,6 +8,7 @@ const db = require("../db/db");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
 const { uploadSingleImage } = require("../middlewares/multer");
+const {handleUpload}  = require("../config/cloudinary")
 
 // Upload single image
 const uploadGalerieImage = uploadSingleImage("image");
@@ -28,7 +29,6 @@ const resizeImage = asyncHandler(async (req, res, next) => {
 
   // Save image into our db
 
-  console.log(req.file);
   req.body.image = process.env.BASE_URL + "/galerie/" + filename;
 
   next();
@@ -55,11 +55,11 @@ const getPhoto = asyncHandler(async (req, res, next) => {
 // creer une image
 const createPhoto = asyncHandler(async (req, res) => {
   const { title, image } = req.body;
-  // let result = await handleUpload(image);
+  let result =  handleUpload(image);
   // const images = await cloudinary.uploader.upload(req.file.path);
   await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [
     title,
-    image,
+    result,
   ]);
 
   res.status(201).json({ message: "photo bien ajouter" });
