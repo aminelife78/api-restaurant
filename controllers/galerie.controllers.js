@@ -55,8 +55,8 @@ const getPhoto = asyncHandler(async (req, res, next) => {
 // creer une image
 const createPhoto = asyncHandler(async (req, res) => {
   const { title, image } = req.body;
-  let result =  handleUpload(image);
-  // const images = await cloudinary.uploader.upload(req.file.path);
+  // let result =  handleUpload(image);
+  const result =  cloudinary.uploader.upload(req.file.path);
   await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [
     title,
     result,
