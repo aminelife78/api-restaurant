@@ -7,7 +7,7 @@ const { getCategoryValidator,createCategoryValidator,updateCategoryValidator,del
 
 
 router.get("/", getCategories);
-router.post("/",authorisation("admin"),createCategoryValidator,createCategory);
+router.post("/",createCategoryValidator,createCategory);
 router.get("/:id",getCategoryValidator,getCategory);
 router.put("/:id",authorisation("admin"),updateCategoryValidator,updateCategory);
 router.delete("/:id",authorisation("admin"),deleteCategoryValidator,deleteCategory);
