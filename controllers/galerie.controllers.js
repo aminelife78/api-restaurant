@@ -23,14 +23,14 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .jpeg({ quality: 50 })
     .toFile(`uploads/galerie/${filename}`);
 
-  // const b64 =  Buffer.from(req.file.buffer).toString("base64");
-  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-  // const cldRes = await handleUpload(dataURI);
-  // req.body.image = cldRes.url
+  const b64 =  Buffer.from(req.file.buffer).toString("base64");
+  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  const cldRes = await handleUpload(dataURI);
+  req.body.image = cldRes.url
 
   // Save image into our db
 
-  req.body.image = process.env.BASE_URL + "/galerie/" + filename;
+  // req.body.image = process.env.BASE_URL + "/galerie/" + filename;
 
   next();
 });
