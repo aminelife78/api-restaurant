@@ -26,7 +26,7 @@ exports.createFormuleValidator = [
     .withMessage("la descreption de plat doit etres une chaine de caractères")
     .isLength({ min: 3 })
     .withMessage("descreption de plat trop court")
-    .isLength({ max: 32 })
+    .isLength({ max: 255 })
     .withMessage("descreption de plat trop long"),
 
   check("prix")
@@ -60,7 +60,7 @@ exports.updateFormuleValidator = [
     .withMessage("la descreption de plat doit etres une chaine de caractères")
     .isLength({ min: 3 })
     .withMessage("descreption de plat trop court")
-    .isLength({ max: 32 })
+    .isLength({ max: 255 })
     .withMessage("descreption de plat trop long"),
 
   check("prix")
