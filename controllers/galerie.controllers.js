@@ -2,7 +2,7 @@ const multer = require("multer");
 const fs = require("fs"); // Added to create directories
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
-const handleUpload = require("../config/cloudinary");
+const handleUpload = require("../config/cloudinary")
 
 const path = require("path");
 const db = require("../db/db");
