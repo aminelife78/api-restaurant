@@ -19,10 +19,10 @@ exports.createHorairesValidator = [
     .withMessage("jours  de plat trop long"),
 
   check("heure_matin")
-    .isLength({ max: 10 })
+    .isLength({ max: 11 })
     .withMessage("heure_matin de plat trop long"),
   check("heure_soir")
-    .isLength({ max: 10 })
+    .isLength({ max: 11 })
     .withMessage("heure_matin de plat trop long"),
 
   validatorMiddleware,
@@ -32,11 +32,11 @@ exports.updateHorairesValidator = [
   check("id").isNumeric().withMessage("Invalid plat id"),
 
   check("heure_matin")
-    .isLength({ max: 10 })
+    .isLength({ max: 11 })
     .withMessage("heure_matin de plat trop long"),
 
   check("heure_soir")
-    .isLength({ max: 10 })
+    .isLength({ max: 11 })
     .withMessage("heure_matin de plat trop long"),
 
   validatorMiddleware,
