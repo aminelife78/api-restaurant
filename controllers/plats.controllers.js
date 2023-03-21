@@ -61,7 +61,6 @@ const resizeImage = asyncHandler(async (req, res, next) => {
   let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
   const cldRes = await handleUpload(dataURI);
   req.body.image = cldRes.url;
-
   // Save image into our db
 
   // req.body.image = process.env.BASE_URL + "/plats/" + filename;
