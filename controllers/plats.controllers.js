@@ -1,55 +1,17 @@
-const multer = require("multer");
-const fs = require("fs"); // Added to create directories
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
-
-// const handleUpload = require("../config/cloudinary");
-
 const path = require("path");
 const db = require("../db/db");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
 const { uploadSingleImage } = require("../middlewares/multer");
-
-//upload images plats methode diskStorage
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     fs.mkdir('./uploads/plats',(err)=>{
-//       cb(null, './uploads/plats');
-//    });
-//   },
-//   filename: async (req, file, cb)=>{
-//     const ext = file.mimetype.split('/')[1]
-
-//     const filename = `plat-${Date.now()}-${Math.random() * 1E9}.${ext}`
-//     cb(null, filename)
-
-//   }
-// })
-// const multerFilter = function (req, file, cb) {
-//   if (file.mimetype.startsWith('image')) {
-//     cb(null, true);
-//   } else {
-//     cb(new ApiError('Only Images allowed', 400), false);
-//   }
-// };
-
-// const upload = multer({ storage: storage,fileFilter: multerFilter  })
-// const platUploadImage = upload.single('image')
-
+const handleUpload = require("../config/cloudinary")
 // Upload single image
-
-//
-
-//
-
-// upload image méthode mémoStorage
 const uploadGalerieImage = uploadSingleImage("image");
 
 // Image processing
 const resizeImage = asyncHandler(async (req, res, next) => {
-  const filename = `plats-${uuidv4()}-${Date.now()}.jpeg`;
+  const filename = `galerie-${uuidv4()}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
     .resize(400, 400)
@@ -57,16 +19,18 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .jpeg({ quality: 50 })
     .toFile(`uploads/plats/${filename}`);
 
-  const b64 = Buffer.from(req.file.buffer).toString("base64");
+  const b64 =  Buffer.from(req.file.buffer).toString("base64");
   let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
   const cldRes = await handleUpload(dataURI);
-  req.body.image = cldRes.url;
+  req.body.image = cldRes.url
+
   // Save image into our db
 
   // req.body.image = process.env.BASE_URL + "/plats/" + filename;
 
   next();
 });
+
 
 // recuperer toutes les plats des plats
 
@@ -112,7 +76,6 @@ const updatePlat = asyncHandler(async (req, res, next) => {
   if (!plat[0]) {
     return next(new apiError(`pas de plats pour ce id ${id}`, 400));
   }
-  // const result = await cloudinary.uploader.upload(req.file.path);
 
   await db.query(
     "UPDATE plats SET titre=?,descreption=?,prix=?,image=?,categories_id=? WHERE id=?",
@@ -140,3 +103,44 @@ module.exports = {
   uploadGalerieImage,
   resizeImage,
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//upload images plats methode diskStorage
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     fs.mkdir('./uploads/plats',(err)=>{
+//       cb(null, './uploads/plats');
+//    });
+//   },
+//   filename: async (req, file, cb)=>{
+//     const ext = file.mimetype.split('/')[1]
+
+//     const filename = `plat-${Date.now()}-${Math.random() * 1E9}.${ext}`
+//     cb(null, filename)
+
+//   }
+// })
+// const multerFilter = function (req, file, cb) {
+//   if (file.mimetype.startsWith('image')) {
+//     cb(null, true);
+//   } else {
+//     cb(new ApiError('Only Images allowed', 400), false);
+//   }
+// };
+
+// const upload = multer({ storage: storage,fileFilter: multerFilter  })
+// const platUploadImage = upload.single('image')
