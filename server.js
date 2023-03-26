@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
 
-
 const app = express();
 let session = require("express-session");
 
@@ -24,7 +23,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // recuperation chemin build pour le deployement
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, "/public")));
 
 const globalError = require("./middlewares/errorMidlleware");
 const apiError = require("./utils/apiError");
@@ -52,7 +51,6 @@ const routeGalerie = require("./routes/galerie.routes");
 const routeHoraires = require("./routes/horaires_ouverture.routes");
 const routeReservations = require("./routes/reservation.routes");
 const routeTables = require("./routes/tables.routes");
-const routeVisiteur = require("./routes/visiteur.routes");
 
 app.get("/", (req, res) => {
   res.send("application web restaurant Ahmed Kitchen");
