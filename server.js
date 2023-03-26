@@ -70,7 +70,6 @@ app.use("/api/v1/galerie", routeGalerie);
 app.use("/api/v1/horaires", routeHoraires);
 app.use("/api/v1/reservations", routeReservations);
 app.use("/api/v1/tables", routeTables);
-app.use("/api/v1/visiteur", routeVisiteur);
 
 // create l'erreur avec apiError si le route n'existe pas!
 app.all("*", (req, res, next) => {
