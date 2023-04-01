@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.d9f384e0.css",
-    "main.js": "/static/js/main.ad8591a3.js",
+    "main.js": "/static/js/main.f72a5d4a.js",
     "static/js/787.aab8bd84.chunk.js": "/static/js/787.aab8bd84.chunk.js",
     "static/media/reservations.jpg": "/static/media/reservations.5810cbc75938f3470240.jpg",
     "static/media/header.WebP": "/static/media/header.6a642532b3cedb4c78c8.WebP",
@@ -13,11 +13,11 @@
     "static/media/anniverssaire.png": "/static/media/anniverssaire.13ab63c83cf9a6e2d70b.png",
     "index.html": "/index.html",
     "main.d9f384e0.css.map": "/static/css/main.d9f384e0.css.map",
-    "main.ad8591a3.js.map": "/static/js/main.ad8591a3.js.map",
+    "main.f72a5d4a.js.map": "/static/js/main.f72a5d4a.js.map",
     "787.aab8bd84.chunk.js.map": "/static/js/787.aab8bd84.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d9f384e0.css",
-    "static/js/main.ad8591a3.js"
+    "static/js/main.f72a5d4a.js"
   ]
 }
