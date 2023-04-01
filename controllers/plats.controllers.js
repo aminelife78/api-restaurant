@@ -14,7 +14,7 @@ const resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `galerie-${uuidv4()}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
-    .resize(400, 400)
+    .resize(200, 200)
     .toFormat("jpeg")
     .jpeg({ quality: 50 })
     .toFile(`uploads/plats/${filename}`);
