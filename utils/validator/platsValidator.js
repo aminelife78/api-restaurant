@@ -26,29 +26,22 @@ exports.createCarteValidator = [
     .withMessage("la descreption de plat doit etres une chaine de caractères")
     .isLength({ min: 3 })
     .withMessage("descreption de plat trop court")
-    .isLength({ max: 32 })
+    .isLength({ max: 255 })
     .withMessage("descreption de plat trop long"),
 
-    check("prix")
+  check("prix")
     .notEmpty()
     .withMessage("descreption de plat obligatoire")
     .isNumeric()
     .withMessage("le prix de plat doit etres un nombre"),
-    
-    
-    
-    check("image")
-    .notEmpty()
-    .withMessage("image  obligatoire"),
-  
-  
-    check("categories_id")
+
+  check("image").notEmpty().withMessage("image  obligatoire"),
+
+  check("categories_id")
     .notEmpty()
     .withMessage("nom de plat obligatoire")
     .isNumeric()
     .withMessage("le prix de plat doit etres un nombre"),
-    
-  
 
   validatorMiddleware,
 ];
@@ -74,23 +67,18 @@ exports.updateCarteValidator = [
     .withMessage("la descreption de plat doit etres une chaine de caractères")
     .isLength({ min: 3 })
     .withMessage("descreption de plat trop court")
-    .isLength({ max: 32 })
+    .isLength({ max: 255 })
     .withMessage("descreption de plat trop long"),
 
-    check("prix")
+  check("prix")
     .notEmpty()
     .withMessage("descreption de plat obligatoire")
     .isNumeric()
     .withMessage("le prix de plat doit etres un nombre"),
-    
-    
-    
-    check("image")
-    .notEmpty()
-    .withMessage("image  obligatoire"),
-  
-  
-    check("categories_id")
+
+  check("image").notEmpty().withMessage("image  obligatoire"),
+
+  check("categories_id")
     .notEmpty()
     .withMessage("nom de plat obligatoire")
     .isNumeric()
