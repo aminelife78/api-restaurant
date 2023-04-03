@@ -28,7 +28,7 @@ const getReservations = asyncHandler(async (req, res) => {
       .status(200)
       .json({ couvertDispo: reservationDispo, data: reservations });
   } else {
-    const reservations = await db.query("select * from reservations ");
+    const reservations = await db.query("select * from reservations ORDER BY id DESC");
     res.status(200).json({ data: reservations });
   }
 });
