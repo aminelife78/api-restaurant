@@ -8,8 +8,7 @@ const sendEmail = require("../utils/sendEmail");
 
 // recuperer toutes les reservations des plats
 const getReservations = asyncHandler(async (req, res) => {
-  // const reservations = await db.query("select r.id,r.date,r.heure,r.nombre_couverts,r.allergies,u.username,u.phone,u.nombre_convives,u.email from reservations as r LEFT JOIN  users as u ON r.clients_id = u.id WHERE nombre_couverts =?  ",[parseInt(rCouverts)]);
-  //    res.status(200).json({ data: reservations });
+
   const { date, heure } = req.query;
   const dateLocale = moment(date).format("YYYY-MM-DD");
 

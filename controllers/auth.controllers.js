@@ -56,6 +56,8 @@ const register = asyncHandler(async (req, res, next) => {
   res.status(201).json({ data: user, token });
 });
 
+
+
 // connextion
 const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
@@ -139,9 +141,8 @@ const authorisation = (...myRole) => {
   });
 };
 
-// @desc    reset mot de passe oublier
-// @route   POST /api/v1/auth/forgotPassword
-// @access  Public
+//reset mot de passe oublier
+
 
 const forgotPassword = asyncHandler(async (req, res, next) => {
   // 1 recuperé user par email
@@ -191,9 +192,8 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Verify password reset code
-// @route   POST /api/v1/auth/verifyResetCode
-// @access  Public
+//Verify password reset code
+
 const verifyPassResetCode = asyncHandler(async (req, res, next) => {
   // 1) recuperer user qui correspond  resetCode
   const { resetCode } = req.body;
@@ -222,9 +222,8 @@ const verifyPassResetCode = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Reset password
-// @route   POST /api/v1/auth/resetPassword
-// @access  Public
+//Reset password
+
 const resetPassword = asyncHandler(async (req, res, next) => {
   // 1) Get user based on email
   // 1 recuperé user par email
@@ -266,9 +265,8 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   res.status(201).json({ token });
 });
 
-// @desc    Contact le restaurant
-// @route   POST /api/v1/auth/contact
-// @access  Public
+//Contact le restaurant
+
 const contact = asyncHandler(async (req, res, next) => {
   const { prenom, mail, subject, message } = req.body;
   await sendEmail({

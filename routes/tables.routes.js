@@ -9,11 +9,12 @@ const {
   updateTable,
   deleteTable,
 } = require("../controllers/tables.controllers");
+const {createTableValidator,updateTableValidator} = require("../utils/validator/tableValidator")
 
 router.get("/", getTables);
-router.post("/", createTable);
+router.post("/",authorisation("admin"),createTableValidator, createTable);
 router.get("/:id", getTable);
-router.put("/:id", updateTable);
-router.delete("/:id", deleteTable);
+router.put("/:id",authorisation("admin"),updateTableValidator, updateTable);
+router.delete("/:id",authorisation("admin"), deleteTable);
 
 module.exports = router;

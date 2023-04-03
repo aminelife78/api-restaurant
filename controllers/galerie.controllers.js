@@ -21,14 +21,16 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .jpeg({ quality: 50 })
     .toFile(`uploads/galerie/${filename}`);
 
-  const b64 =  Buffer.from(req.file.buffer).toString("base64");
-  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-  const cldRes = await handleUpload(dataURI);
-  req.body.image = cldRes.url
 
-  // Save image into our db
+  //méthode1 stoket les image dans cloudinary
 
-  // req.body.image = process.env.BASE_URL + "/galerie/" + filename;
+  // const b64 =  Buffer.from(req.file.buffer).toString("base64");
+  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  // const cldRes = await handleUpload(dataURI);
+  // req.body.image = cldRes.url
+
+  // méthode2 stoket l'url de l'image dans bd sans passr par cloudinary
+  req.body.image = process.env.BASE_URL + "/galerie/" + filename;
 
   next();
 });
@@ -54,8 +56,6 @@ const getPhoto = asyncHandler(async (req, res, next) => {
 // creer une image
 const createPhoto = asyncHandler(async (req, res) => {
   const { title, image } = req.body;
-  // let images = await handleUpload(req.file.path);
-  // const images = await cloudinary.uploader.upload(req.file.path);
   await db.query("INSERT INTO galerie (title,image) VALUES (?,?)", [
     title,
     image,

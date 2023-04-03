@@ -19,14 +19,15 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .jpeg({ quality: 50 })
     .toFile(`uploads/plats/${filename}`);
 
-  const b64 =  Buffer.from(req.file.buffer).toString("base64");
-  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-  const cldRes = await handleUpload(dataURI);
-  req.body.image = cldRes.url
+    //méthode1 stoket les image dans cloudinary
 
-  // Save image into our db
+  // const b64 =  Buffer.from(req.file.buffer).toString("base64");
+  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  // const cldRes = await handleUpload(dataURI);
+  // req.body.image = cldRes.url
 
-  // req.body.image = process.env.BASE_URL + "/plats/" + filename;
+  // méthode2 stoket l'url de l'image dans bd sans passr par cloudinary
+  req.body.image = process.env.BASE_URL + "/plats/" + filename;
 
   next();
 });
@@ -103,6 +104,10 @@ module.exports = {
   uploadGalerieImage,
   resizeImage,
 };
+
+
+
+
 
 
 
