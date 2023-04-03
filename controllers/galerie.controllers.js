@@ -24,13 +24,13 @@ const resizeImage = asyncHandler(async (req, res, next) => {
 
   //méthode1 stoket les image dans cloudinary
 
-  // const b64 =  Buffer.from(req.file.buffer).toString("base64");
-  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-  // const cldRes = await handleUpload(dataURI);
-  // req.body.image = cldRes.url
+  const b64 =  Buffer.from(req.file.buffer).toString("base64");
+  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  const cldRes = await handleUpload(dataURI);
+  req.body.image = cldRes.url
 
   // méthode2 stoket l'url de l'image dans bd sans passr par cloudinary
-  req.body.image = process.env.BASE_URL + "/galerie/" + filename;
+  // req.body.image = process.env.BASE_URL + "/galerie/" + filename;
 
   next();
 });

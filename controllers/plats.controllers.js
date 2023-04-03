@@ -5,7 +5,7 @@ const db = require("../db/db");
 const asyncHandler = require("express-async-handler");
 const apiError = require("../utils/apiError");
 const { uploadSingleImage } = require("../middlewares/multer");
-const handleUpload = require("../config/cloudinary")
+const handleUpload = require("../config/cloudinary");
 // Upload single image
 const uploadGalerieImage = uploadSingleImage("image");
 
@@ -19,19 +19,18 @@ const resizeImage = asyncHandler(async (req, res, next) => {
     .jpeg({ quality: 50 })
     .toFile(`uploads/plats/${filename}`);
 
-    //méthode1 stoket les image dans cloudinary
+  //méthode1 stoket les image dans cloudinary
 
-  // const b64 =  Buffer.from(req.file.buffer).toString("base64");
-  // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-  // const cldRes = await handleUpload(dataURI);
-  // req.body.image = cldRes.url
+  const b64 = Buffer.from(req.file.buffer).toString("base64");
+  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  const cldRes = await handleUpload(dataURI);
+  req.body.image = cldRes.url;
 
   // méthode2 stoket l'url de l'image dans bd sans passr par cloudinary
-  req.body.image = process.env.BASE_URL + "/plats/" + filename;
+  // req.body.image = process.env.BASE_URL + "/plats/" + filename;
 
   next();
 });
-
 
 // recuperer toutes les plats des plats
 
@@ -104,24 +103,6 @@ module.exports = {
   uploadGalerieImage,
   resizeImage,
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //upload images plats methode diskStorage
 
