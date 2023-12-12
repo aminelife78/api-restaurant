@@ -16,8 +16,8 @@ const { authorisation } = require("../controllers/auth.controllers");
 
 router.get("/",authorisation("admin"), getUsers);
 router.post("/",authorisation("admin"),createUserValidator, createUser);
-router.get("/:id",authorisation("admin"), getUser);
-router.put("/:id",authorisation("admin"), updateUser);
+router.get("/:id",authorisation("admin","client"), getUser);
+router.put("/:id",authorisation("admin","client"), updateUser);
 router.delete("/:id",authorisation("admin"), deleteUser);
 
 module.exports = router;

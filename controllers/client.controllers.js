@@ -32,7 +32,7 @@ const createUser = asyncHandler(async (req, res) => {
 // modifier une categorie
 const updateUser = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const { username,email,password,role } = req.body;
+  const { username,email,password } = req.body;
 
   const User = await db.query("SELECT * FROM users WHERE id=?", [id]);
 
@@ -40,7 +40,7 @@ const updateUser = asyncHandler(async (req, res, next) => {
     return next(new apiError(`pas de users pour ce id ${id}`, 400));
   }
   const hash = await bcrypt.hash(password, 10);
-  await db.query("UPDATE users SET username=?,email=?,password=?,role=? WHERE id=?", [username,email,hash,role, id]);
+  await db.query("UPDATE users SET username=?,email=?,password=? WHERE id=?", [username,email,hash, id]);
   res
     .status(200)
     .json({ message: `le User avec id ${id} est bien modifier` });

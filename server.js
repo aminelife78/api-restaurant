@@ -1,6 +1,5 @@
 const path = require("path");
 const express = require("express");
-const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
 
@@ -28,6 +27,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 const globalError = require("./middlewares/errorMidlleware");
 const apiError = require("./utils/apiError");
 
+const dotenv = require("dotenv");
 dotenv.config({ path: "config.env" });
 
 if (process.env.NODE_ENV === "undefined") {
@@ -42,6 +42,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //require routes
 const routeCategories = require("./routes/categories.routes");
+
 const routePlats = require("./routes/plats.routes");
 const routeMenus = require("./routes/menus.routes");
 const routeFormules = require("./routes/formules.routes");
@@ -59,6 +60,8 @@ app.get("/", (req, res) => {
 //  routes middleware
 
 app.use("/api/v1/categories", routeCategories);
+
+
 app.use("/api/v1/plats", routePlats);
 app.use("/api/v1/menus", routeMenus);
 app.use("/api/v1/formules", routeFormules);
@@ -66,7 +69,10 @@ app.use("/api/v1/users", routeUsers);
 app.use("/api/v1/auth", routeAuth);
 app.use("/api/v1/galerie", routeGalerie);
 app.use("/api/v1/horaires", routeHoraires);
+
+
 app.use("/api/v1/reservations", routeReservations);
+
 app.use("/api/v1/tables", routeTables);
 
 // create l'erreur avec apiError si le route n'existe pas!
@@ -79,9 +85,18 @@ app.use(globalError);
 
 // port recuperer depuis config.env
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`http://localhost:${port}`));
+const server = app.listen(port, () => console.log(`http://localhost:${port}`));
 
-// handle rejection outside express
+// Handle rejection outside express
 process.on("unhandledRejection", (err) => {
-  console.error(`UnhandledRejection error: ${err.name} ${err.message}`);
+  console.error(`UnhandledRejection Errors: ${err.name} | ${err.message}`);
+  server.close(() => {
+    console.error(`éteindre....`);
+    process.exit(1);
+  });
 });
+
+
+
+
+

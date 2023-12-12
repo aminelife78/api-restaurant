@@ -21,7 +21,7 @@ exports.createTableValidator = [
     .isNumeric()
     .withMessage("le nombre de table doit etres un nombre"),
 
-  check("temps").notEmpty().withMessage("choisir midi ou soir"),
+
   validatorMiddleware,
 ];
 
@@ -40,6 +40,5 @@ exports.updateTableValidator = [
     .isNumeric()
     .withMessage("le nombre de table doit etres un nombre"),
 
-  check("temps").notEmpty().withMessage("choisir midi ou soir"),
   validatorMiddleware,
 ];

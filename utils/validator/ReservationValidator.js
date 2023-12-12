@@ -7,6 +7,10 @@ exports.getReservationValidator = [
 ];
 
 exports.createReservationValidator = [
+  check("heure")
+    .not()
+    .isEmpty()
+    .withMessage("Veuillez ajouter l'heure"),
   check("nom")
   .notEmpty()
   .withMessage('nom utilisateur requis')
@@ -27,6 +31,7 @@ exports.createReservationValidator = [
     .not()
     .isEmpty()
     .withMessage("Veuillez ajouter une date"),
+    
   check("nombre_couverts")
     .isLength({ min: 1 })
     .withMessage("Veuillez ajouter le nombre de couverts"),
@@ -61,6 +66,11 @@ exports.updateReservationValidator = [
     .not()
     .isEmpty()
     .withMessage("Veuillez ajouter une date"),
+    check("heure")
+    .exists()
+    .not()
+    .isEmpty()
+    .withMessage("Veuillez ajouter l'heure"),
   check("nombre_couverts")
     .isLength({ min: 1 })
     .withMessage("Veuillez ajouter le nombre de couverts"),

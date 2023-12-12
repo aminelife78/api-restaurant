@@ -11,6 +11,6 @@ router.get("/",getReservations);
 router.post("/",createReservationValidator,createReservation);
 router.get("/:id",getReservationValidator,getReservation);
 router.put("/:id",updateReservationValidator,updateReservation);
-router.delete("/:id",authorisation("admin"),deleteReservationValidator,deleteReservation);
+router.delete("/:id",authorisation("admin","client"),deleteReservationValidator,deleteReservation);
 
 module.exports = router;

@@ -23,7 +23,7 @@ const getTable = asyncHandler(async (req, res, next) => {
 // creer une table
 const createTable = asyncHandler(async (req, res) => {
   const { nbr_convive,time,temps } = req.body;
-  await db.query("INSERT INTO tables (nbr_convive,time,temps) VALUES (?,?,?)", [nbr_convive,time,temps]);
+  await db.query("INSERT INTO tables (nbr_convive,time) VALUES (?,?)", [nbr_convive,time]);
   res
     .status(201)
     .json({ message: "table bien ajouter" });

@@ -32,7 +32,7 @@ const register = asyncHandler(async (req, res, next) => {
   // creer user
   await db.query(
     "INSERT INTO users (username,email,password,nombre_convives,phone,allergies,role) VALUES (?,?,?,?,?,?,?)",
-    [username, email, hash, nombre_convives, phone, allergies, role]
+    [username, email, hash, nombre_convives, phone, allergies, "client"]
   );
 
   const user = await db.query("SELECT * FROM users WHERE email=?", [email]);

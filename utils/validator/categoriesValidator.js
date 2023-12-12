@@ -21,8 +21,6 @@ exports.createCategoryValidator = [
   validatorMiddleware,
 ];
 
-
-
 exports.updateCategoryValidator = [
   check("id").isNumeric().withMessage("Invalid category id"),
   check("name")
