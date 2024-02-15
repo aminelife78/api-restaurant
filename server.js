@@ -4,15 +4,15 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const app = express();
-let session = require("express-session");
+// let session = require("express-session");
 
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+// app.use(
+//   session({
+//     secret: "keyboard cat",
+//     resave: false,
+//     saveUninitialized: true,
+//   })
+// );
 
 const corsOptions = {
   origin: "http://localhost:3000",
