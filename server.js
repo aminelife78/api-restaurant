@@ -26,10 +26,7 @@ app.use(cors(corsOptions));
 // recuperation chemin build pour le deployement
 app.use(express.static(path.join(__dirname, "/public")));
 
-// Handle React routing, return all requests to React app
-app.use('*', function(req, res) {
-  res.sendFile(path.join(__dirname, '/public', 'index.html'));
-});
+
 
 const globalError = require("./middlewares/errorMidlleware");
 const apiError = require("./utils/apiError");
@@ -81,6 +78,11 @@ app.use("/api/v1/horaires", routeHoraires);
 app.use("/api/v1/reservations", routeReservations);
 
 app.use("/api/v1/tables", routeTables);
+
+// Handle React routing, return all requests to React app
+app.use('*', function(req, res) {
+  res.sendFile(path.join(__dirname, '/public', 'index.html'));
+});
 
 // create l'erreur avec apiError si le route n'existe pas!
 app.all("*", (req, res, next) => {
