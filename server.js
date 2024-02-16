@@ -26,6 +26,11 @@ app.use(cors(corsOptions));
 // recuperation chemin build pour le deployement
 app.use(express.static(path.join(__dirname, "/public")));
 
+// Handle React routing, return all requests to React app
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname, '/public', 'index.html'));
+});
+
 const globalError = require("./middlewares/errorMidlleware");
 const apiError = require("./utils/apiError");
 
