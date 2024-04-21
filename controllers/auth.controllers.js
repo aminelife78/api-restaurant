@@ -9,7 +9,7 @@ const moment = require("moment");
 
 // inscréption
 const register = asyncHandler(async (req, res, next) => {
-  const { username, email, password, nombre_convives, phone, allergies, role } =
+  const { username, email, password, nombre_convives, phone, allergies } =
     req.body;
   // 1 verifier si l'email existe deja?
   const countEmail = await db.query(
@@ -31,8 +31,8 @@ const register = asyncHandler(async (req, res, next) => {
 
   // creer user
   await db.query(
-    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies,role) VALUES (?,?,?,?,?,?,?)",
-    [username, email, hash, nombre_convives, phone, allergies, "client"]
+    "INSERT INTO users (username,email,password,nombre_convives,phone,allergies) VALUES (?,?,?,?,?,?)",
+    [username, email, hash, nombre_convives, phone, allergies]
   );
 
   const user = await db.query("SELECT * FROM users WHERE email=?", [email]);
@@ -91,8 +91,7 @@ const login = asyncHandler(async (req, res, next) => {
         expiresIn: process.env.JWT_EXPIRATION,
       }
     );
-    req.session.user_id = user[0].id;
-    console.log(req.session.user_id);
+    
     const message = `L'utilisateur a été connecté avec succès`;
     return res.json({ message, data: user, token });
   }

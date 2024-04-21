@@ -8,9 +8,7 @@ const getCategories = asyncHandler(async (req, res) => {
   const countCategories = categories.length;
   res.status(200).json({ result: countCategories, data: categories });
 });
-
 // recuperer une seul categories
-
 const getCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const category = await db.query("SELECT * FROM categories WHERE id=?", [id]);
@@ -19,16 +17,12 @@ const getCategory = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({ data: category });
 });
-
 // creer une categorie
 const createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
   await db.query("INSERT INTO categories (name) VALUES (?)", [name]);
-  res
-    .status(201)
-    .json({ message: "categories bien ajouter" });
+  res.status(201).json({ message: "categories bien ajouter" });
 });
-
 // modifier une categorie
 const updateCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
@@ -44,7 +38,7 @@ const updateCategory = asyncHandler(async (req, res, next) => {
 
   res
     .status(200)
-    .json({ message: `la categorie avec id ${id} est bien modifier`});
+    .json({ message: `la categorie avec id ${id} est bien modifier` });
 });
 // suprimer une categorie
 const deleteCategory = asyncHandler(async (req, res) => {
@@ -52,7 +46,6 @@ const deleteCategory = asyncHandler(async (req, res) => {
   await db.query("DELETE FROM categories WHERE id=?", [id]);
   res.status(200).json({
     message: `la categorie avec id ${id} est bien supprimer`,
-   
   });
 });
 // exporte crud les categories

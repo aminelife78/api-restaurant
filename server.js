@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 // let session = require("express-session");
@@ -14,8 +15,6 @@ const app = express();
 //   })
 // );
 
-
-
 const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true, //access-control-allow-credentials:true
@@ -25,8 +24,6 @@ app.use(cors(corsOptions));
 
 // recuperation chemin build pour le deployement
 app.use(express.static(path.join(__dirname, "/public")));
-
-
 
 const globalError = require("./middlewares/errorMidlleware");
 const apiError = require("./utils/apiError");
@@ -41,8 +38,16 @@ if (process.env.NODE_ENV === "undefined") {
 //chemin statique
 app.use(express.static(path.join(__dirname, "uploads")));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "20kb" }));
+app.use(express.urlencoded({ extended: true,limit: "20kb"  }));
+
+// Limitez chaque IP à 100 requêtes par « fenêtre » (ici, toutes les 15 minutes).
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  message: "Vous ne pouvez faire que 100 demandes par 15 minutes",
+});
+app.use("/api", limiter);
 
 //require routes
 const routeCategories = require("./routes/categories.routes");
@@ -65,7 +70,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/categories", routeCategories);
 
-
 app.use("/api/v1/plats", routePlats);
 app.use("/api/v1/menus", routeMenus);
 app.use("/api/v1/formules", routeFormules);
@@ -74,14 +78,13 @@ app.use("/api/v1/auth", routeAuth);
 app.use("/api/v1/galerie", routeGalerie);
 app.use("/api/v1/horaires", routeHoraires);
 
-
 app.use("/api/v1/reservations", routeReservations);
 
 app.use("/api/v1/tables", routeTables);
 
 // Handle React routing, return all requests to React app
-app.use('*', function(req, res) {
-  res.sendFile(path.join(__dirname, '/public', 'index.html'));
+app.use("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "/public", "index.html"));
 });
 
 // create l'erreur avec apiError si le route n'existe pas!
@@ -104,8 +107,3 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
-
-
-
-
-

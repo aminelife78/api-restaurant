@@ -52,34 +52,6 @@ const getReservations = asyncHandler(async (req, res) => {
 
 
 
-// recuperer toutes les reservations des plats
-// const getReservations = asyncHandler(async (req, res) => {
-//   const { date, heure } = req.query;
-//   const dateLocale = moment(date).format("YYYY-MM-DD");
-
-//   if (dateLocale && heure) {
-//     const max_couverts = await db.query(
-//       "SELECT nbr_convive from tables WHERE time=?",
-//       [heure]
-//     );
-//     const reservations = await db.query(
-//       "select sum(nombre_couverts) from reservations where date=? AND heure=?",
-//       [dateLocale, heure]
-//     );
-//     const reservationDispo = Number(
-//       max_couverts[0].nbr_convive - reservations[0]["sum(nombre_couverts)"]
-//     );
-//     res
-//       .status(200)
-//       .json({ couvertDispo: reservationDispo, data: reservations });
-//   } else {
-//     const reservations = await db.query(
-//       "select * from reservations ORDER BY id DESC"
-//     );
-//     res.status(200).json({ data: reservations });
-//   }
-// });
-
 // recuperer une seul reservation
 
 const getReservation = asyncHandler(async (req, res, next) => {
@@ -95,63 +67,9 @@ const getReservation = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: reservation });
 });
 
-// creer une reservation
-// const createReservation = asyncHandler(async (req, res, next) => {
-//   const {
-//     nom,
-//     email,
-//     phone,
-//     nombre_couverts,
-//     date,
-//     heure,
-//     allergies,
-//     visiteur_id,
-//     clients_id,
-//   } = req.body;
-//   const dateLocale = moment(date).format("YYYY-MM-DD");
-//   const heures = heure.toString();
-//   const max_couverts = await db.query(
-//     "SELECT nbr_convive from tables WHERE time=?",
-//     [heure]
-//   );
-
-//   const table_disponible = await db.query(
-//     "SELECT SUM(nombre_couverts) as total FROM reservations WHERE date = ? AND heure = ?",
-//     [date, heure]
-//   );
-//   const total_reservation_heure = Number(table_disponible[0].total);
-
-//   if (
-//     Number(nombre_couverts) + Number(total_reservation_heure) >
-//     max_couverts[0].nbr_convive
-//   ) {
-//     return next(
-//       new apiError(
-//         `Nombre de couverts non disponibles pour le ${dateLocale} à ${heure}`,
-//         400
-//       )
-//     );
-//   } else {
-//     await db.query(
-//       "INSERT INTO reservations (nom,email,phone,nombre_couverts,date,heure,allergies) VALUES (?,?,?,?,?,?,?)",
-//       [nom, email, phone, nombre_couverts, dateLocale, heure, allergies]
-//     );
-//     const message = `Cher(e) ${nom},\n Nous vous remercions de votre demande de réservation au Ahmed Kitchen pour ${dateLocale} à ${heure}. Nous vous réservons une table pour ${nombre_couverts} personnes, à ${heure} le ${dateLocale}, comme demandé. Nous sommes impatients de vous accueillir et de vous faire découvrir notre cuisine.\n \n En attendant votre visite, n'hésitez pas à consulter notre menu sur notre site web, ainsi que nos offres spéciales pour des événements particuliers.\n Cordialement,\n Ahmed Zeyd`;
-
-//     sendEmail({
-//       mail: "E-chiken App <ahmedkitchen238@gmail.com>",
-//       email: email,
-//       subject: "Confirmation de réservation de table au restaurant",
-//       message: message,
-//     });
-//     res.status(200).json({ message: "reservation bien ajouter" });
-//   }
-// });
 
 
-
-
-// test creer une reservation
+//  creer une reservation
 const createReservation = asyncHandler(async (req, res, next) => {
     const {
       nom,
